@@ -5,5 +5,20 @@
 # npm日志
 npm-debug.log
 
+# 发布后的代码
+dist/*.gz
+dist/*.map
+dist/*.min.js
+
 # node 依赖包
 node_modules/
+
+# Mac 的生成文件
+.DS_Store
+
+# 测试报告
+test/e2e/reports
+test/e2e/screenshots
+
+# 自己的待开发任务
+TODOs.md
