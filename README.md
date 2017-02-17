@@ -4,3 +4,6 @@
 
 ## 概述
 
+格式检验
+
+    ./node_modules/.bin/eslint src
