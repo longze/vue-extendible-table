@@ -4,6 +4,6 @@
  */
 
 let a = 'a';
-let b = a + 'b';
+var b = a + 'b';
 
 export default {b};
