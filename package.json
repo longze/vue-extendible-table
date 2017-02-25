@@ -17,7 +17,9 @@
     "type": "git",
     "url": "git://github.com/longze/vue-extendible-table.git"
   },
-  "dependencies": {},
+  "dependencies": {
+    "vue": "^2.1.10"
+  },
   "license": "MIT",
   "devDependencies": {
     "eslint": "^3.15.0"
