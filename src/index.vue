@@ -1,10 +1,10 @@
 <template>
-    <table>
+    <table class="vst-table">
         <thead>
         <tr>
-            <td v-for="item in options.columns">
+            <th v-for="item in options.columns">
                 {{item.label}}
-            </td>
+            </th>
         </tr>
         </thead>
         <tbody>
@@ -14,7 +14,8 @@
                       :data="item[column.fieldName]"
                       :lineData="item"
                       :tableData="data"
-                      :columnOptions="column">
+                      :columnOptions="column"
+                      :table="table">
                 </slot>
             </td>
         </tr>
@@ -22,7 +23,7 @@
     </table>
 </template>
 <script>
-    module.exports = {
+    export default {
         props: {
             options: Object
         },
@@ -37,8 +38,15 @@
                         name: 'jerry',
                         age: 1
                     }
-                ]
+                ],
+                table: this
+            }
+        },
+        methods: {
+            testFn: function () {
+                console.log('testFn');
             }
         }
     };
 </script>
+<style src="./index.less" lang="less"></style>

@@ -2,9 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>vue scalable table example</title>
 </head>
 <body>
-
+<div id="app">
+    <table-component :options="tableOptions">
+        <template slot="name" scope="props">
+            <table-widget-text :data="props.data"></table-widget-text>
+        </template>
+        <template slot="age" scope="props">
+            <table-widget-number :data="props.data" :table="props.table"></table-widget-number>
+        </template>
+    </table-component>
+</div>
+<script src="js/index.js"></script>
 </body>
 </html>
