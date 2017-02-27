@@ -7,10 +7,10 @@
 <body>
 <div id="app">
     <table-component :options="tableOptions">
-        <template slot="name" scope="props">
+        <template slot="text" scope="props">
             <table-widget-text :data="props.data"></table-widget-text>
         </template>
-        <template slot="age" scope="props">
+        <template slot="number" scope="props">
             <table-widget-number :data="props.data" :table="props.table"></table-widget-number>
         </template>
     </table-component>

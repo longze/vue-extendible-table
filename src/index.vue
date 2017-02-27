@@ -3,20 +3,23 @@
         <thead>
         <tr>
             <th v-for="item in options.columns">
-                {{item.label}}
+                {{item.title}}
             </th>
         </tr>
         </thead>
         <tbody>
         <tr v-for="item in data">
             <td v-for="column in options.columns">
-                <slot :name="column.fieldName"
-                      :data="item[column.fieldName]"
+                <slot v-if="column.slot" :name="column.slot"
+                      :data="item[column.field]"
                       :lineData="item"
                       :tableData="data"
                       :columnOptions="column"
                       :table="table">
                 </slot>
+                <template v-else>
+                    {{item[column.field]}}
+                </template>
             </td>
         </tr>
         </tbody>
@@ -29,16 +32,7 @@
         },
         data: function () {
             return {
-                data: [
-                    {
-                        name: 'tom',
-                        age: 3
-                    },
-                    {
-                        name: 'jerry',
-                        age: 1
-                    }
-                ],
+                data: this.options.data || [],
                 table: this
             }
         },
