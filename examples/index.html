@@ -8,10 +8,10 @@
 <div id="app">
     <table-component :options="tableOptions">
         <template slot="text" scope="props">
-            <table-widget-text :data="props.data"></table-widget-text>
+            <vst-text-plugin :data="props.data"></vst-text-plugin>
         </template>
         <template slot="number" scope="props">
-            <table-widget-number :data="props.data" :table="props.table"></table-widget-number>
+            <vst-number-plugin :data="props.data" :table="props.table"></vst-number-plugin>
         </template>
     </table-component>
 </div>

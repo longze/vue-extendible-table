@@ -45,7 +45,7 @@ new Vue({
     },
     components: {
         'table-component': tableComponent,
-        'table-widget-text': vstTextPlugin,
-        'table-widget-number': vstNumberPlugin
+        'vst-text-plugin': vstTextPlugin,
+        'vst-number-plugin': vstNumberPlugin
     }
 });
