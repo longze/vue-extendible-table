@@ -2,6 +2,9 @@
  * Created by zhaoxiaoqiang on 2017/2/26.
  */
 import Vue from 'vue/dist/vue.common.js';
+import VueResource from 'vue-resource';
+
+Vue.use(VueResource);
 
 import tableComponent from '../src/index.vue';
 import vstTextPlugin from './vst-plugin/text';
@@ -19,7 +22,7 @@ new Vue({
                     slot: 'text'          // 单元格组件的名称
                 },
                 {
-                    label: '年龄',
+                    title: '年龄',
                     field: 'age',
                     width: '180px',
                     slot: 'number'

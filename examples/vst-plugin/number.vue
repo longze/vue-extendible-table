@@ -13,7 +13,8 @@
             table: Object
         },
         data: function () {
-            this.table.testFn();
+            // 可以直接使用table的方法
+            // this.table.testFn();
             return {};
         }
     };

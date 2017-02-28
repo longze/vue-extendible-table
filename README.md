@@ -19,12 +19,13 @@
                 slot: 'text'          // 单元格组件的名称
             },
             {
-                label: '年龄',
+                title: '年龄',
                 field: 'age',
                 width: '180px',
                 slot: 'number'
             }
         ],
+        // 可以直接展示数据
         data: [
             {
                 name: 'tom',
@@ -35,6 +36,7 @@
                 age: 1
             }
         ],
+        // 也可以通过配置 url 和 params 异步获取数据
         url: '/users',
         params: {
             name: '',

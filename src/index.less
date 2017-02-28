@@ -1,25 +1,35 @@
-.vst-table {
-    table-layout: fixed;
-    width: 100%;
-    background: #dfe6ec;
-    border-spacing: 1px;
+.container-vst {
     font-size: 14px;
-    tr:nth-child(2n) {
-        background: #fafafa;
-    }
-    tr {
-        background-color: #fff;
-        &:hover {
-            background: #c9e5f5;
+    .vst-table {
+        table-layout: fixed;
+        width: 100%;
+        background: #dfe6ec;
+        border-spacing: 1px;
+        tr:nth-child(2n) {
+            background: #fafafa;
+        }
+        tr {
+            background-color: #fff;
+            &:hover {
+                background: #c9e5f5;
+            }
+        }
+        tr th {
+            background-color: #eef1f6;
+            text-align: left;
+        }
+        td,
+        th {
+            line-height: 2.5em;
+            padding: 0 0.75em;
         }
     }
-    tr th {
-        background-color: #eef1f6;
-        text-align: left;
-    }
-    td,
-    th {
+    .vst-text {
+        text-align: center;
         line-height: 2.5em;
-        padding: 0 0.75em;
+        border: 1px solid #dfe6ec;
+        border-top: none;
+        background: #fafafa;
+        color: #8e8f90;
     }
 }
