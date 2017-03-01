@@ -38,6 +38,16 @@ new Vue({
                     age: 1
                 }
             ],
+            /**
+             * 返回的数据可能是一个复杂结构，可以自定义获取数据的方法，也可以做一些数据加工
+             *
+             * @param res {Object} 返回的数据，组件默认使用 vue-resource 加载异步数据，
+             *                     默认会在后台返回的数据上加一层 body ，当然你可以全局设置去掉 body
+             * @return {Array} 表格的数据
+             */
+            getData (res) {
+                return res.body.data;
+            },
             url: '/users',
             params: {
                 name: '',

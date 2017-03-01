@@ -1,41 +1,11 @@
-<template>
-    <div class="container-vst">
-        <table class="vst-table">
-            <thead>
-            <tr>
-                <th v-for="item in options.columns">
-                    {{item.title}}
-                </th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr v-for="item in data">
-                <td v-for="column in options.columns">
-                    <slot v-if="column.slot" :name="column.slot"
-                          :data="item[column.field]"
-                          :lineData="item"
-                          :tableData="data"
-                          :columnOptions="column"
-                          :table="table">
-                    </slot>
-                    <template v-else>
-                        {{item[column.field]}}
-                    </template>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-        <div class="vst-text" v-show="isShowText">
-            {{text}}
-        </div>
-    </div>
-</template>
+<template src="./index.tpl.html"></template>
 <script>
     export default {
         props: {
             options: Object
         },
         mounted () {
+            this.initSelectedItems();
             this.loadData();
         },
         data () {
@@ -43,23 +13,54 @@
                 data: this.options.data || [],
                 table: this,
                 isShowText: false,
-                text: ''
+                text: '',
+                mainField: this.options.mainField || 'id',
+                selectedItems: [],
             }
         },
         methods: {
+            initSelectedItems () {
+                let selectedItems = [];
+                let optionsSelectedItems = this.options.selectedItems;
+
+                if (Array.isArray(optionsSelectedItems) && optionsSelectedItems.length > 0) {
+                    let dataType = typeof optionsSelectedItems[0];
+                    // 直接传入以主键为元素的数组
+                    if (dataType === 'number' || dataType === 'string') {
+                        selectedItems = [];
+                        let mainField = this.mainField;
+                        optionsSelectedItems.forEach(item => {
+                            selectedItems.push({
+                                [mainField]: item
+                            })
+                        });
+                    }
+                    // 传入以对象为元素的数组
+                    else {
+                        selectedItems = this.options.selectedItems;
+                    }
+                }
+                this.selectedItems = selectedItems;
+            },
             reloadData () {
                 this.loadData();
             },
             loadData () {
-                this.data = [];
                 if (this.options.url) {
+                    this.data = [];
                     this.isShowText = true;
                     this.text = '加载中...';
                     this.$http.get(this.options.url, {
                         params: this.options.params || {}
                     }).then(res => {
                         this.isShowText = false;
-                        this.data = res.body.data;
+                        if (this.options.getData) {
+                            this.data = this.options.getData(res);
+                        }
+                        else {
+                            this.data = res.body.data;
+                        }
+
                         if (this.data.length === 0) {
                             this.isShowText = true;
                             this.text = '暂未找到数据';

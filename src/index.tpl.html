@@ -1,0 +1,30 @@
+<div class="container-vst">
+    <table class="vst-table">
+        <thead>
+        <tr>
+            <th v-for="item in options.columns">
+                {{item.title}}
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="item in data">
+            <td v-for="column in options.columns">
+                <slot v-if="column.slot" :name="column.slot"
+                      :data="item[column.field]"
+                      :lineData="item"
+                      :tableData="data"
+                      :columnOptions="column"
+                      :table="table">
+                </slot>
+                <template v-else>
+                    {{item[column.field]}}
+                </template>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="vst-text" v-show="isShowText">
+        {{text}}
+    </div>
+</div>
