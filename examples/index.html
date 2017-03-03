@@ -7,6 +7,9 @@
 <body>
 <div id="app">
     <table-component :options="tableOptions">
+        <template slot="checkbox" scope="props">
+            <el-checkbox></el-checkbox>
+        </template>
         <template slot="text" scope="props">
             <vst-text-plugin :data="props.data"></vst-text-plugin>
         </template>
@@ -14,6 +17,9 @@
             <vst-number-plugin :data="props.data" :table="props.table"></vst-number-plugin>
         </template>
     </table-component>
+
+    <input type="text" v-model="text">
+    <button @click="copy">复制</button>
 </div>
 <script src="js/index.js"></script>
 </body>

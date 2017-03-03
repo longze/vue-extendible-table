@@ -9,6 +9,9 @@ Vue.use(VueResource);
 import tableComponent from '../src/index.vue';
 import vstTextPlugin from './vst-plugin/text';
 import vstNumberPlugin from './vst-plugin/number';
+import ElCheckbox from 'element-ui/lib/checkbox';
+import 'element-ui/lib/theme-default/checkbox.css';
+import clipboard from 'clipboard-js';
 
 new Vue({
     el: '#app',
@@ -54,11 +57,16 @@ new Vue({
                 pageSize: 10,
                 currentPage: 1
             }
-        }
+        },
+        text: 'abc'
     },
     components: {
         'table-component': tableComponent,
         'vst-text-plugin': vstTextPlugin,
-        'vst-number-plugin': vstNumberPlugin
+        'vst-number-plugin': vstNumberPlugin,
+        'el-checkbox': ElCheckbox
+    },
+    methods: {
+
     }
 });
