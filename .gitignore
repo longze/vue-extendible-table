@@ -6,9 +6,7 @@
 npm-debug.log
 
 # 发布后的代码
-dist/*.gz
-dist/*.map
-dist/*.min.js
+dist
 
 # node 依赖包
 node_modules/
@@ -19,6 +17,12 @@ node_modules/
 # 测试报告
 test/e2e/reports
 test/e2e/screenshots
+
+# 脚手架
+gulpfile.js
+
+# mock 数据
+mock
 
 # 自己的待开发任务
 TODOs.md

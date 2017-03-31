@@ -2,7 +2,10 @@
 <script>
     export default {
         props: {
-            options: Object
+            options: {
+                type: Object,
+                require: true
+            }
         },
         mounted () {
             this.initSelectedItems();
@@ -12,9 +15,13 @@
             return {
                 data: this.options.data || [],
                 table: this,
+                // 加载中，暂无数据等文本展示是否展示的开关
                 isShowText: false,
+                // 加载中，暂无数据等文本
                 text: '',
+                // 主键
                 mainField: this.options.mainField || 'id',
+                // 跨页选中功能 中记录选中项
                 selectedItems: [],
             }
         },

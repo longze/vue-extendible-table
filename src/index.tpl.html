@@ -2,23 +2,23 @@
     <table class="vst-table">
         <thead>
         <tr>
-            <th v-for="item in options.columns">
+            <th v-for="item in options.headers">
                 {{item.title}}
             </th>
         </tr>
         </thead>
         <tbody>
         <tr v-for="item in data">
-            <td v-for="column in options.columns">
-                <slot v-if="column.slot" :name="column.slot"
-                      :data="item[column.field]"
+            <td v-for="header in options.headers">
+                <slot v-if="header.slot" :name="header.slot"
+                      :data="item[header.field]"
                       :lineData="item"
                       :tableData="data"
-                      :columnOptions="column"
+                      :headerOptions="header"
                       :table="table">
                 </slot>
                 <template v-else>
-                    {{item[column.field]}}
+                    {{item[header.field]}}
                 </template>
             </td>
         </tr>

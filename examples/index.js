@@ -9,15 +9,15 @@ Vue.use(VueResource);
 import tableComponent from '../src/index.vue';
 import vstTextPlugin from './vst-plugin/text';
 import vstNumberPlugin from './vst-plugin/number';
+
 import ElCheckbox from 'element-ui/lib/checkbox';
 import 'element-ui/lib/theme-default/checkbox.css';
-import clipboard from 'clipboard-js';
 
 new Vue({
     el: '#app',
     data: {
         tableOptions: {
-            columns: [
+            headers: [
                 {
                     title: '姓名',        // 表格标题
                     field: 'name',        // 字段名，prop
