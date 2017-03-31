@@ -6,7 +6,9 @@
 </head>
 <body>
 <div id="app">
-    <table-component :options="tableOptions">
+    <button @click="search"> 查询 </button>
+    <!-- 的 -->
+    <table-component :options="tableOptions" ref="table">
         <template slot="checkbox" scope="props">
             <el-checkbox></el-checkbox>
         </template>

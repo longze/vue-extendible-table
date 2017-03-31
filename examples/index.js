@@ -12,6 +12,9 @@ import vstNumberPlugin from './vst-plugin/number';
 
 import ElCheckbox from 'element-ui/lib/checkbox';
 import 'element-ui/lib/theme-default/checkbox.css';
+import ElPagination from 'element-ui/lib/pagination';
+import 'element-ui/lib/theme-default/pagination.css';
+import 'element-ui/lib/theme-default/index.css';
 
 new Vue({
     el: '#app',
@@ -48,14 +51,12 @@ new Vue({
              *                     默认会在后台返回的数据上加一层 body ，当然你可以全局设置去掉 body
              * @return {Array} 表格的数据
              */
-            getData (res) {
-                return res.body.data;
+            afterGetData (res) {
+                return res.body.data.list;
             },
             url: '/users',
             params: {
-                name: '',
-                pageSize: 10,
-                currentPage: 1
+                name: '固定参数，和搜索条件与页码无关'
             }
         },
         text: 'abc'
@@ -64,9 +65,17 @@ new Vue({
         'table-component': tableComponent,
         'vst-text-plugin': vstTextPlugin,
         'vst-number-plugin': vstNumberPlugin,
-        'el-checkbox': ElCheckbox
+        'el-checkbox': ElCheckbox,
+        'el-pagination': ElPagination
     },
     methods: {
-
+        // 模拟表单的查询条件
+        search () {
+            // this.$refs.table.reloadData
+            this.$refs.table.search({
+                a: 'a',
+                b: 'b'
+            });
+        }
     }
 });
