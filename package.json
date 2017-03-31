@@ -1,6 +1,7 @@
 {
   "name": "vue-scalable-table",
   "description": "可扩展的vue表格组件",
+  "version": "1.0.1",
   "keywords": [
     "vue",
     "table",
@@ -8,7 +9,7 @@
     "scalable",
     "longze"
   ],
-  "main": "server/lib/main.js",
+  "main": "src/index.vue",
   "author": {
     "name": "赵晓强",
     "email": "longze_xq@163.com"

@@ -105,13 +105,13 @@
                             this.data = this.options.afterGetData(res);
                         }
                         else {
-                            this.data = res.body.data.list;
+                            this.data = res.body.list;
                         }
 
                         // 页码量处理
                         let pageConfig = typeof this.options.pageConfig === 'object' ? this.options.pageConfig : {};
                         let dataTotalField = pageConfig.dataTotalField ? pageConfig.dataTotalField : 'total';
-                        this.page.dataTotal = res.body.data[dataTotalField];
+                        this.page.dataTotal = res.body[dataTotalField];
 
                         if (this.data.length === 0) {
                             this.isShowText = true;
