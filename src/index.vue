@@ -40,6 +40,11 @@
                 }
             }
         },
+        computed: {
+            showPage () {
+                return typeof this.options.pageConfig === 'object';
+            }
+        },
         methods: {
             initSelectedItems () {
                 let selectedItems = [];
@@ -73,7 +78,7 @@
                     this.searchData = searchData;
                 }
                 // 重置页码
-                this.page.pageNumber = 1;
+                this.page.currentPage = 1;
                 this.loadData();
             },
             loadData () {
@@ -81,7 +86,7 @@
                     this.data = [];
                     this.isShowText = true;
                     this.text = '加载中...';
-                    let pageConfig = typeof this.options.pageConfig === 'object' ? this.options.pageConfig : {};
+
 
                     // 固定参数
                     let params = (typeof this.options.params === 'object') ? this.options.params : {};
@@ -94,8 +99,13 @@
                     }
 
                     // 页码处理
-                    let currentPageField = pageConfig.currentPageField ? pageConfig.currentPageField : 'currentPage';
-                    params[currentPageField] = this.page.currentPage;
+                    if (this.showPage) {
+                        let config = this.options.pageConfig;
+                        let currentPageField = config.currentPageField ? config.currentPageField : 'currentPage';
+                        params[currentPageField] = this.page.currentPage;
+                        let pageSizeField = config.pageSizeField ? config.pageSizeField : 'pageSize';
+                        params[pageSizeField] = config.pageSize || 10;
+                    }
 
                     this.$http.get(this.options.url, {
                         params: params
@@ -105,13 +115,15 @@
                             this.data = this.options.afterGetData(res);
                         }
                         else {
-                            this.data = res.body.list;
+                            this.data = res.body.data.list;
                         }
 
-                        // 页码量处理
-                        let pageConfig = typeof this.options.pageConfig === 'object' ? this.options.pageConfig : {};
-                        let dataTotalField = pageConfig.dataTotalField ? pageConfig.dataTotalField : 'total';
-                        this.page.dataTotal = res.body[dataTotalField];
+                        // 数据条数处理
+                        if (this.showPage) {
+                            let config = this.options.pageConfig;
+                            let dataTotalField = config.dataTotalField ? config.dataTotalField : 'total';
+                            this.page.dataTotal = res.body.data[dataTotalField];
+                        }
 
                         if (this.data.length === 0) {
                             this.isShowText = true;
@@ -123,8 +135,8 @@
                     });
                 }
             },
-            changePage (pageNumber) {
-                this.page.pageNumber = pageNumber;
+            changePage (currentPage) {
+                this.page.currentPage = currentPage;
                 this.loadData();
             }
         }

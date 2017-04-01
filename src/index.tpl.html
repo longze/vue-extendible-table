@@ -27,7 +27,7 @@
     <div class="vst-text" v-show="isShowText">
         {{text}}
     </div>
-    <el-pagination v-show="!isShowText"
+    <el-pagination v-if="showPage" v-show="!isShowText"
             layout="prev, pager, next"
             :total="page.dataTotal"
             :current-page="page.currentPage"

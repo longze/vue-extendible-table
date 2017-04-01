@@ -57,6 +57,12 @@ new Vue({
             url: '/users',
             params: {
                 name: '固定参数，和搜索条件与页码无关'
+            },
+            pageConfig: {
+                currentPageField: 'currentPage',
+                dataTotalField: 'total',
+                pageSizeField: 'pageSize',
+                pageSize: 11
             }
         },
         text: 'abc'
