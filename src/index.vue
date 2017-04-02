@@ -1,11 +1,11 @@
 <template src="./index.tpl.html"></template>
 <script>
 
+    import 'element-ui/lib/theme-default/index.css';
     import ElCheckbox from 'element-ui/lib/checkbox';
     import 'element-ui/lib/theme-default/checkbox.css';
     import ElPagination from 'element-ui/lib/pagination';
     import 'element-ui/lib/theme-default/pagination.css';
-    import 'element-ui/lib/theme-default/index.css';
 
     export default {
         props: {
