@@ -112,11 +112,10 @@
                     }).then(res => {
                         this.isShowText = false;
                         if (this.options.afterGetData) {
-                            this.data = this.options.afterGetData(res);
+                            this.options.afterGetData(res);
                         }
-                        else {
-                            this.data = res.body.data.list;
-                        }
+
+                        this.data = res.body.data.list;
 
                         // 数据条数处理
                         if (this.showPage) {
