@@ -1,7 +1,7 @@
 {
   "name": "vue-scalable-table",
   "description": "可扩展的vue表格组件",
-  "version": "1.0.5",
+  "version": "1.0.7",
   "keywords": [
     "vue",
     "table",

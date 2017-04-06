@@ -7,8 +7,9 @@ import VueResource from 'vue-resource';
 Vue.use(VueResource);
 
 import tableComponent from '../src/index.vue';
-import vstTextPlugin from './vst-plugin/text';
-import vstNumberPlugin from './vst-plugin/number';
+import vstTextPlugin from '../src/vst-plugin/text';
+import vstNumberPlugin from '../src/vst-plugin/number';
+import vstTextMap from '../src/vst-plugin/text-map';
 
 import ElCheckbox from 'element-ui/lib/checkbox';
 import 'element-ui/lib/theme-default/checkbox.css';
@@ -32,8 +33,15 @@ new Vue({
                     field: 'age',
                     width: '180px',
                     slot: 'number'
+                },
+                {
+                    title: '心情',
+                    field: 'mood',
+                    width: '180px',
+                    slot: 'text-map'
                 }
             ],
+            // 静态数据
             data: [
                 {
                     name: 'tom',
@@ -63,14 +71,26 @@ new Vue({
                 dataTotalField: 'total',
                 pageSizeField: 'pageSize',
                 pageSize: 11
-            }
+            },
+            moodMap: [
+                {
+                    value: 1,
+                    text: '平静'
+                },
+                {
+                    value: 2,
+                    text: '激动'
+                }
+            ]
         },
         text: 'abc'
+
     },
     components: {
         'table-component': tableComponent,
         'vst-text-plugin': vstTextPlugin,
         'vst-number-plugin': vstNumberPlugin,
+        'vst-text-map': vstTextMap,
         'el-checkbox': ElCheckbox,
         'el-pagination': ElPagination
     },

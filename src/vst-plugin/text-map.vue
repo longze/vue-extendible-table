@@ -2,6 +2,10 @@
     <span :class="styleClass">{{text}}</span>
 </template>
 <script>
+    /**
+     * 经常有后端提供 value，前端通过一个 map 转成对应的 text 的需求，
+     * 这个组件可以用在表格中，也可以单独使用
+     */
     export default {
         props: {
             /**
@@ -25,17 +29,23 @@
             },
             styleClass: {
                 type: Array,
-                default: []
+                default: () => {
+                    return [];
+                }
             }
         },
         data: function () {
             let text = this.emptyStr;
-            this.dataMap.some((item) => {
-                if (item.value === this.value) {
-                    text = item.text;
-                    return true;
-                }
-            });
+
+            // 按 map 将 value 转换成 text
+            if (Array.isArray(this.dataMap)) {
+                this.dataMap.some((item) => {
+                    if (item.value === this.value) {
+                        text = item.text;
+                        return true;
+                    }
+                });
+            }
 
             return {
                 text

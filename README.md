@@ -79,7 +79,9 @@
             name: '',
             pageSize: 10,
             currentPage: 1
-        }
+        },
+        // 还可以添加其他参数，作为插件的数据源，插件中可以用 props.options. 来引用
+        ... 
     }
     
 ### 插件使用方法
@@ -91,7 +93,11 @@
             <vst-text-plugin :data="props.data"></vst-text-plugin>
         </template>
         <template slot="number" scope="props">
-            <vst-number-plugin :data="props.data" :table="props.table"></vst-number-plugin>
+            <vst-number-plugin 
+                :data="props.data" 
+                :table="props.table" 
+                :plugin-data="props.options.pluginData">
+            </vst-number-plugin>
         </template>
     </table-component>
 
@@ -112,14 +118,15 @@
         lineData,        // 当前单元格所在行的数据
         tableData,       // 表格的整体数据
         columnOptions,   // 当前单元格的配置信息
-        table            // 表格的引用，可以通过此参数直接使用表格的方法
+        table,           // 表格的引用，可以通过此参数直接使用表格的方法
+        options          // 配置 table 的数据，可以用来传递插件特有数据
     }
 
 插件可以直接使用上面的数据实现自身的逻辑。注意：在可扩展表格的设计上给了插件很大的操作空间，可以直接操作表格的数据，这可能影响到其他插件的运行和表格整体的展现。
 
 ## 开发方式
 
-格式检验
+启动运行
     
-    ./node_modules/.bin/eslint src
+    gulp
 

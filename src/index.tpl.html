@@ -17,6 +17,7 @@
             </td>
             <td v-for="header in options.headers">
                 <slot v-if="header.slot" :name="header.slot"
+                      :options="options"
                       :data="item[header.field]"
                       :lineData="item"
                       :tableData="data"
