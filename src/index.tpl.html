@@ -2,20 +2,24 @@
     <table class="vst-table">
         <thead>
         <tr>
-            <th if="options.firstRow">
-
+            <th v-if="options.firstRow" :style="{width: options.firstRow.width}" :class="options.firstRow.styleClass">
+                <template v-if="options.firstRow.type === 'number'">
+                    {{options.firstRow.title || '序号'}}
+                </template>
             </th>
-            <th v-for="item in options.headers">
+            <th v-for="item in options.headers" :style="{width: item.width}" :class="item.styleClass">
                 {{item.title}}
             </th>
         </tr>
         </thead>
         <tbody>
-        <tr v-for="item in data">
-            <td if="options.firstRow">
-
+        <tr v-for="(item, index) in data">
+            <td v-if="options.firstRow">
+                <template v-if="options.firstRow.type === 'number'">
+                    {{pageBase + index + 1}}
+                </template>
             </td>
-            <td v-for="header in options.headers">
+            <td v-for="header in options.headers" :class="header.styleClass">
                 <slot v-if="header.slot" :name="header.slot"
                       :options="options"
                       :data="item[header.field]"

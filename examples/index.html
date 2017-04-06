@@ -9,9 +9,6 @@
     <button @click="search"> 查询 </button>
     <!-- 的 -->
     <table-component :options="tableOptions" ref="table">
-        <template slot="checkbox" scope="props">
-            <el-checkbox></el-checkbox>
-        </template>
         <template slot="text" scope="props">
             <vst-text-plugin :data="props.data"></vst-text-plugin>
         </template>

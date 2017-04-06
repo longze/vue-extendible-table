@@ -13,19 +13,23 @@
 表格的配置一般会比较多，所以我更倾向于使用 js 对象来配置
 
     options: {
-        mainField: 'id',
+        mainField: 'id',      // 默认主键为 "id"
         firstRow: {
-            type: 'checkbox'  // 还有 'number'
+            type: 'checkbox',  // 还有 'number'
             minChecked: 1,    // 只有 type 为 'checkbox' 时生效
             maxChecked: 5,    // 只有 type 为 'checkbox' 时生效
-            isOverPage: true  // 只有 type 为 'checkbox' 时生效
+            isOverPage: true,  // 只有 type 为 'checkbox' 时生效
+            // 挂 class 方便自定义样式，在表头和表体的单元格上都有，可以通过 th 和 td 来区分它们
+            styleClass: ['a-class']
         },
         headers: [
             {
                 title: '姓名',        // 表格标题
                 field: 'name',        // 字段名，prop
                 width: '50%',         // 宽度同时支持百分比和像素配置
-                slot: 'text'          // 单元格组件的名称
+                slot: 'text',         // 单元格组件的名称
+                // 挂 class 方便自定义样式，在表头和表体的单元格上都有，可以通过 th 和 td 来区分它们
+                styleClass: ['a-class']
             },
             {
                 title: '年龄',
@@ -80,6 +84,13 @@
             pageSize: 10,
             currentPage: 1
         },
+        // 页码的配置，不配置此项时不显示页码
+        pageConfig: {
+            currentPageField: 'currentPage',  // 向后台请求时的字段名 -- 请求第几页数据，缺省值 "currentPage"
+            pageSizeField: 'pageSize',   // 向后台请求时的字段名 -- 每页要几条，缺省值 "pageSize"
+            dataTotalField: 'total',     // 后台返回数据总条数的字段设置，缺省值 "total"
+            pageSize: 10                 // 默认每页 10 条
+        },
         // 还可以添加其他参数，作为插件的数据源，插件中可以用 props.options. 来引用
         ... 
     }
@@ -130,3 +141,8 @@
     
     gulp
 
+## 开发花絮
+
+*为什么分页和多选没有不是插件*
+
+如果将分页和多选也按插件的形式传入，每次使用的时候都需要引用分页和多选组件引用，由于多数是后台系统对速度不是很敏感，所以在资源大小和使用方便上选择了后者。另外在做跨页选中的时候，多选框以插件的形式传入有一部分逻辑需要写进业务代码，而这部分逻辑是通用的。哪些东西需要内聚哪些东西需要解耦是经过场景定制的(脱离场景谈架构设计是耍流氓)，比如很多表格最后一列是操作按钮，这一列的逻辑是和业务相关的，所以这一列我们希望通过组件的形式来传入。

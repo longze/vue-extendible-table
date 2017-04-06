@@ -36,8 +36,11 @@
                 selectedItems: [],
                 searchData: {},
                 page: {
-                    dataTotal: 0
-                }
+                    dataTotal: 0,
+                    currentPage: 1
+                },
+                // 首列为序号时需要需要此参数，当前页的序号加上此参数就是多页的序号
+                pageBase: 0
             }
         },
         computed: {
@@ -59,7 +62,7 @@
                         optionsSelectedItems.forEach(item => {
                             selectedItems.push({
                                 [mainField]: item
-                            })
+                            });
                         });
                     }
                     // 传入以对象为元素的数组
@@ -87,7 +90,6 @@
                     this.isShowText = true;
                     this.text = '加载中...';
 
-
                     // 固定参数
                     let params = (typeof this.options.params === 'object') ? this.options.params : {};
 
@@ -99,14 +101,17 @@
                     }
 
                     // 页码处理
+                    let pageSize;
                     if (this.showPage) {
                         let config = this.options.pageConfig;
                         let currentPageField = config.currentPageField ? config.currentPageField : 'currentPage';
                         params[currentPageField] = this.page.currentPage;
                         let pageSizeField = config.pageSizeField ? config.pageSizeField : 'pageSize';
-                        params[pageSizeField] = config.pageSize || 10;
+                        pageSize = config.pageSize || 10;
+                        params[pageSizeField] = pageSize;
                     }
 
+                    // 异步获取数据
                     this.$http.get(this.options.url, {
                         params: params
                     }).then(res => {
@@ -122,12 +127,18 @@
                             let config = this.options.pageConfig;
                             let dataTotalField = config.dataTotalField ? config.dataTotalField : 'total';
                             this.page.dataTotal = res.body.data[dataTotalField];
+
+                            if (this.options.firstRow && this.options.firstRow.type === 'number') {
+                                this.pageBase = (this.page.currentPage - 1) * pageSize;
+                            }
                         }
 
                         if (this.data.length === 0) {
                             this.isShowText = true;
                             this.text = '暂未找到数据';
                         }
+
+
                     }, res => {
                         this.isShowText = true;
                         this.text = res.body.statusInfo || '数据加载失败';

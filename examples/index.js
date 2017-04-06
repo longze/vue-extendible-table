@@ -11,7 +11,6 @@ import vstTextPlugin from '../src/vst-plugin/text';
 import vstNumberPlugin from '../src/vst-plugin/number';
 import vstTextMap from '../src/vst-plugin/text-map';
 
-import ElCheckbox from 'element-ui/lib/checkbox';
 import 'element-ui/lib/theme-default/checkbox.css';
 import ElPagination from 'element-ui/lib/pagination';
 import 'element-ui/lib/theme-default/pagination.css';
@@ -21,12 +20,22 @@ new Vue({
     el: '#app',
     data: {
         tableOptions: {
+            firstRow: {
+                width: '30px',
+                type: 'checkbox',  // 'number' 'checkbox'
+                title: '序号',      // 序号 选择 全选
+                hasSelectAll: true, // 是否有全选功能，为 true 时，title 被重置为"全选"
+                canSwitchSelectInvertion: true, // 是否能反选切换，全部未选中时为全选，有选中项时为反选
+                maxChecked: 5,      // 只有 type 为 'checkbox' 时生效
+                isOverPage: true    // 只有 type 为 'checkbox' 时生效
+            },
             headers: [
                 {
                     title: '姓名',        // 表格标题
                     field: 'name',        // 字段名，prop
-                    width: '50%',         // 宽度同时支持百分比和像素配置
-                    slot: 'text'          // 单元格组件的名称
+                    // width: '50%',         // 宽度同时支持百分比和像素配置
+                    slot: 'text',          // 单元格组件的名称
+                    styleClass: ['a-class']
                 },
                 {
                     title: '年龄',
@@ -66,12 +75,14 @@ new Vue({
             params: {
                 name: '固定参数，和搜索条件与页码无关'
             },
+            // 页码的配置，不配置此项时不显示页码
             pageConfig: {
                 currentPageField: 'currentPage',
                 dataTotalField: 'total',
                 pageSizeField: 'pageSize',
-                pageSize: 11
+                pageSize: 10
             },
+            // 为某个插件准备的数据，可以是业务数据
             moodMap: [
                 {
                     value: 1,
@@ -91,7 +102,6 @@ new Vue({
         'vst-text-plugin': vstTextPlugin,
         'vst-number-plugin': vstNumberPlugin,
         'vst-text-map': vstTextMap,
-        'el-checkbox': ElCheckbox,
         'el-pagination': ElPagination
     },
     methods: {
