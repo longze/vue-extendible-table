@@ -15,7 +15,20 @@
             }
         },
         mounted () {
-            this.initSelectedItems();
+            // 处理配置的默认值
+            let firstRow = this.options.firstRow;
+
+            if (firstRow && firstRow.type === 'checkbox') {
+                firstRow.hasSelectAll = firstRow.hasSelectAll === undefined ? true : firstRow.hasSelectAll;
+                var canSI = firstRow.canSwitchSelectInvertion;
+                firstRow.canSwitchSelectInvertion = canSI === undefined ? true : canSI;
+                firstRow.isOverPage = firstRow.isOverPage === undefined ? true : firstRow.isOverPage;
+
+                this.initSelectedItems();
+                this.addCheckedAttr();
+                this.computeSelectAll();
+            }
+
             this.loadData();
         },
         components: {
@@ -23,6 +36,7 @@
             'el-pagination': ElPagination
         },
         data () {
+
             return {
                 data: this.options.data || [],
                 table: this,
@@ -44,12 +58,19 @@
             }
         },
         computed: {
-            showPage () {
+            showPage() {
                 return typeof this.options.pageConfig === 'object';
             }
         },
         methods: {
-            initSelectedItems () {
+            /**
+             * 对回写数据做兼容处理，选中项数组，可以是主键的数组，也可以是选中对象的数组
+             * 主键的数组的两种数据类型：
+             * [1, 2] 或 ['1', '2']
+             * 选中对象的数组：
+             * [{id: 1, name: ''}, {id: 2, name: ''}]
+             */
+            initSelectedItems() {
                 let selectedItems = [];
                 let optionsSelectedItems = this.options.selectedItems;
 
@@ -72,10 +93,54 @@
                 }
                 this.selectedItems = selectedItems;
             },
-            reloadData () {
+            // 为原数据添加是否选中属性 checked
+            addCheckedAttr() {
+                const mainField = this.mainField;
+                this.data.forEach(item => {
+                    item.checked = this.selectedItems.some((selectedItem, index) => {
+                        if (item[mainField] === selectedItem[mainField]) {
+                            // 这里用原数据替换之前传入的数据 为了 数据的统一，
+                            // 新选中的数据和传入的选中项数据异构时不方便处理
+                            // 这里有一个坑，当传入的选中项在第二页并且用户没有翻到第二页时，第二页的那条选中数据不会被替换
+                            this.selectedItems[index] = item;
+                            return true;
+                        }
+                    });
+                });
+            },
+            selectChange(item) {
+                // 移除一条选中数据
+                if (item.checked) {
+                    this.selectedItems.some((selectedItem, index) => {
+                       if (item[this.mainField] === selectedItem[this.mainField]) {
+                           this.selectedItems.splice(index, 1);
+                       }
+                    });
+                }
+                // 添加一条选中数据
+                else {
+                    this.selectedItems.push(item);
+                }
+                item.checked = !item.checked;
+                this.computeSelectAll();
+            },
+            // 计算全选和反选状态
+            computeSelectAll() {
+                let firstRow = this.options.firstRow;
+                if (firstRow.hasSelectAll) {
+                    firstRow.title = '全选';
+                }
+            },
+            // 刷新当页数据
+            reloadData() {
                 this.loadData();
             },
-            search (searchData) {
+            /**
+             * 对外提供搜索接口
+             *
+             * @param {Object} searchData 收索参数
+             */
+            search(searchData) {
                 // 准备搜索数据
                 if (typeof searchData === 'object') {
                     this.searchData = searchData;
@@ -84,14 +149,15 @@
                 this.page.currentPage = 1;
                 this.loadData();
             },
-            loadData () {
+            // 加载异步数据，共组件内部调用
+            loadData() {
                 if (this.options.url) {
                     this.data = [];
                     this.isShowText = true;
                     this.text = '加载中...';
 
                     // 固定参数
-                    let params = (typeof this.options.params === 'object') ? this.options.params : {};
+                    let params = typeof this.options.params === 'object' ? this.options.params : {};
 
                     // 搜索参数
                     for (let key in this.searchData) {
@@ -138,14 +204,19 @@
                             this.text = '暂未找到数据';
                         }
 
-
+                        this.addCheckedAttr();
                     }, res => {
                         this.isShowText = true;
                         this.text = res.body.statusInfo || '数据加载失败';
                     });
                 }
             },
-            changePage (currentPage) {
+            /**
+             * 翻页
+             *
+             * @param {Number} currentPage 返到哪一页
+             */
+            changePage(currentPage) {
                 this.page.currentPage = currentPage;
                 this.loadData();
             }

@@ -21,14 +21,21 @@ new Vue({
     data: {
         tableOptions: {
             firstRow: {
-                width: '30px',
+                width: '50px', // 30px  50px
                 type: 'checkbox',  // 'number' 'checkbox'
                 title: '序号',      // 序号 选择 全选
-                hasSelectAll: true, // 是否有全选功能，为 true 时，title 被重置为"全选"
-                canSwitchSelectInvertion: true, // 是否能反选切换，全部未选中时为全选，有选中项时为反选
-                maxChecked: 5,      // 只有 type 为 'checkbox' 时生效
-                isOverPage: true    // 只有 type 为 'checkbox' 时生效
+
+                // 下面配置 只有 type 为 'checkbox' 时生效
+                hasSelectAll: true, // 是否有全选功能，为 true 时，title 被重置为"全选"，缺省值为 true
+                canSwitchSelectInvertion: true, // 是否能反选切换，全部未选中时为全选，有选中项时为反选，缺省值为 true
+                maxChecked: 1,      // 最多选中几个，不设置无限多
+                isOverPage: true    // 是否跨页选中，缺省值为 true
             },
+            selectedItems: [1, 4],       // 选中项数组，可以是主键的数组，也可以是选中对象的数组
+            // 主键的数组的两种数据类型：
+            // [1, 2] 或 ['1', '2']
+            // 选中对象的数组：
+            // [{id: 1, name: ''}, {id: 2, name: ''}]
             headers: [
                 {
                     title: '姓名',        // 表格标题

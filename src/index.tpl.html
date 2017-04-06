@@ -6,6 +6,12 @@
                 <template v-if="options.firstRow.type === 'number'">
                     {{options.firstRow.title || '序号'}}
                 </template>
+                <template else-if="options.firstRow.type === 'checkbox'">
+                    <el-checkbox></el-checkbox>
+                    <template v-if="options.firstRow.hasSelectAll">
+                        {{options.firstRow.title}}
+                    </template>
+                </template>
             </th>
             <th v-for="item in options.headers" :style="{width: item.width}" :class="item.styleClass">
                 {{item.title}}
@@ -17,6 +23,9 @@
             <td v-if="options.firstRow">
                 <template v-if="options.firstRow.type === 'number'">
                     {{pageBase + index + 1}}
+                </template>
+                <template else-if="options.firstRow.type === 'checkbox'">
+                    <el-checkbox :checked="item.checked" @change="selectChange(item)"></el-checkbox>
                 </template>
             </td>
             <td v-for="header in options.headers" :class="header.styleClass">
