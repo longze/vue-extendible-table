@@ -1,7 +1,10 @@
-<div class="container-vst">
+<div class="container-vst clear">
     <table class="vst-table">
         <thead>
         <tr>
+            <th if="options.firstRow">
+
+            </th>
             <th v-for="item in options.headers">
                 {{item.title}}
             </th>
@@ -9,6 +12,9 @@
         </thead>
         <tbody>
         <tr v-for="item in data">
+            <td if="options.firstRow">
+
+            </td>
             <td v-for="header in options.headers">
                 <slot v-if="header.slot" :name="header.slot"
                       :data="item[header.field]"

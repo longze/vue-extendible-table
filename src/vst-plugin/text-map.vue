@@ -1,5 +1,5 @@
 <template>
-    {{text}}
+    <span :class="styleClass">{{text}}</span>
 </template>
 <script>
     export default {
@@ -11,14 +11,21 @@
              *      text: '通过'
              * }]
              */
-            dataMap: Object,
+            dataMap: {
+                type: Array,
+                required: true
+            },
+            value: {
+                required: true
+            },
             // 匹配不到 value 时的 text 值
             emptyStr: {
                 type: String,
                 default: '-'
             },
-            value: {
-                required: true
+            styleClass: {
+                type: Array,
+                default: []
             }
         },
         data: function () {

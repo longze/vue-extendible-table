@@ -1,5 +1,11 @@
 .container-vst {
     font-size: 14px;
+    &.clear:after {
+        content: "\200B";
+        display: block;
+        height: 0;
+        clear: both;
+    }
     .vst-table {
         table-layout: fixed;
         width: 100%;
@@ -37,5 +43,4 @@
         margin: 5px 0;
         padding: 0;
     }
-
 }
