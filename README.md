@@ -14,6 +14,12 @@
 
     options: {
         mainField: 'id',
+        firstRow: {
+            type: 'checkbox'  // 还有 'number'
+            minChecked: 1,    // 只有 type 为 'checkbox' 时生效
+            maxChecked: 5,    // 只有 type 为 'checkbox' 时生效
+            isOverPage: true  // 只有 type 为 'checkbox' 时生效
+        },
         headers: [
             {
                 title: '姓名',        // 表格标题
@@ -42,7 +48,7 @@
         // 返回的数据可能是一个复杂结构，可以自定义获取数据的方法，也可以做一些数据加工
         afterGetData(res) {
             // 可以对 res 做数据加工
-            // 组件期待的格式是这样：
+            // 组件期待 res.body 的格式是这样：
             /*
             {
                 "code": 200,
