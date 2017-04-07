@@ -20,12 +20,35 @@
 
             if (firstRow && firstRow.type === 'checkbox') {
                 firstRow.hasSelectAll = firstRow.hasSelectAll === undefined ? true : firstRow.hasSelectAll;
-                var canSI = firstRow.canSwitchSelectInvertion;
+                let canSI = firstRow.canSwitchSelectInvertion;
                 firstRow.canSwitchSelectInvertion = canSI === undefined ? true : canSI;
                 firstRow.isOverPage = firstRow.isOverPage === undefined ? true : firstRow.isOverPage;
 
-                this.initSelectedItems();
-                this.addCheckedAttr();
+                let dataList = [];
+                // 将双向绑定属性洗白成简单对象数据，
+                // 这样就可以触发 this.data 赋值时的双向绑定计算
+                if (Array.isArray(this.options.data)) {
+                    this.options.data.forEach(item => {
+                        let newItem = {};
+                        for (let key in item) {
+                            if (item.hasOwnProperty(key)) {
+                                newItem[key] = item[key];
+                            }
+                        }
+                        dataList.push(newItem);
+                    });
+                }
+
+                this.addExtendAttr(dataList);
+                this.data = dataList;
+
+                let mainField = this.options.mainField || 'id';
+                this.initSelectedItems(mainField);
+
+                if (this.data.length > 0) {
+                    this.rewriteCheckedAttr();
+                }
+
                 this.computeSelectAll();
             }
 
@@ -36,9 +59,8 @@
             'el-pagination': ElPagination
         },
         data () {
-
             return {
-                data: this.options.data || [],
+                data: [],
                 table: this,
                 // 加载中，暂无数据等文本展示是否展示的开关
                 isShowText: false,
@@ -58,28 +80,43 @@
             }
         },
         computed: {
+            // 是否显示页码
             showPage() {
                 return typeof this.options.pageConfig === 'object';
             }
         },
         methods: {
+            getSelectedItems() {
+                return this.selectedItems;
+            },
+            getSelectedItemsMainField() {
+                let result = [];
+
+                this.selectedItems.forEach(item => {
+                   result.push(item[this.mainField]);
+                });
+
+                return result;
+            },
             /**
              * 对回写数据做兼容处理，选中项数组，可以是主键的数组，也可以是选中对象的数组
              * 主键的数组的两种数据类型：
              * [1, 2] 或 ['1', '2']
              * 选中对象的数组：
              * [{id: 1, name: ''}, {id: 2, name: ''}]
+             *
+             * @param {String} mainField 主键字段
              */
-            initSelectedItems() {
+            initSelectedItems(mainField) {
                 let selectedItems = [];
                 let optionsSelectedItems = this.options.selectedItems;
 
                 if (Array.isArray(optionsSelectedItems) && optionsSelectedItems.length > 0) {
                     let dataType = typeof optionsSelectedItems[0];
+
                     // 直接传入以主键为元素的数组
                     if (dataType === 'number' || dataType === 'string') {
                         selectedItems = [];
-                        let mainField = this.mainField;
                         optionsSelectedItems.forEach(item => {
                             selectedItems.push({
                                 [mainField]: item
@@ -91,11 +128,19 @@
                         selectedItems = this.options.selectedItems;
                     }
                 }
+
                 this.selectedItems = selectedItems;
             },
+            // 添加扩展字段，用于实现表格的操作逻辑
+            addExtendAttr(dataList) {
+                dataList.forEach(item => {
+                    item.checked = false;
+                });
+            },
             // 为原数据添加是否选中属性 checked
-            addCheckedAttr() {
+            rewriteCheckedAttr() {
                 const mainField = this.mainField;
+
                 this.data.forEach(item => {
                     item.checked = this.selectedItems.some((selectedItem, index) => {
                         if (item[mainField] === selectedItem[mainField]) {
@@ -108,13 +153,14 @@
                     });
                 });
             },
-            selectChange(item) {
+            // 某一行数据的选中状态发生改变
+            selectChange(item, doComputeSelectAll) {
                 // 移除一条选中数据
                 if (item.checked) {
                     this.selectedItems.some((selectedItem, index) => {
-                       if (item[this.mainField] === selectedItem[this.mainField]) {
-                           this.selectedItems.splice(index, 1);
-                       }
+                        if (item[this.mainField] === selectedItem[this.mainField]) {
+                            this.selectedItems.splice(index, 1);
+                        }
                     });
                 }
                 // 添加一条选中数据
@@ -122,14 +168,36 @@
                     this.selectedItems.push(item);
                 }
                 item.checked = !item.checked;
-                this.computeSelectAll();
+
+                // 全选和反选时不需要每次都计算
+                if (!doComputeSelectAll) {
+                    this.computeSelectAll();
+                }
             },
             // 计算全选和反选状态
             computeSelectAll() {
                 let firstRow = this.options.firstRow;
                 if (firstRow.hasSelectAll) {
-                    firstRow.title = '全选';
+                    // 全部没选中
+                    let noOneChecked = this.data.every(item => {
+                        return item.checked === false;
+                    });
+
+                    if (noOneChecked) {
+                        firstRow.title = '全选';
+                    }
+                    else if (firstRow.canSwitchSelectInvertion) {
+                        firstRow.title = '反选';
+                    }
                 }
+            },
+            // 反选, 全选和反选在逻辑上都是反选，
+            // 注：在逻辑处理上只有当前页全不选中才是全选，否则就是反选
+            inverseSelected() {
+                this.data.forEach(item => {
+                    this.selectChange(item, true);
+                });
+                this.computeSelectAll();
             },
             // 刷新当页数据
             reloadData() {
@@ -147,6 +215,7 @@
                 }
                 // 重置页码
                 this.page.currentPage = 1;
+
                 this.loadData();
             },
             // 加载异步数据，共组件内部调用
@@ -182,10 +251,12 @@
                         params: params
                     }).then(res => {
                         this.isShowText = false;
+
+                        // 对外提供数据加工时机，来应对数据异构的情况
                         if (this.options.afterGetData) {
                             this.options.afterGetData(res);
                         }
-
+                        this.addExtendAttr(res.body.data.list);
                         this.data = res.body.data.list;
 
                         // 数据条数处理
@@ -204,7 +275,8 @@
                             this.text = '暂未找到数据';
                         }
 
-                        this.addCheckedAttr();
+                        this.rewriteCheckedAttr();
+                        this.computeSelectAll();
                     }, res => {
                         this.isShowText = true;
                         this.text = res.body.statusInfo || '数据加载失败';

@@ -94,7 +94,11 @@
         // 还可以添加其他参数，作为插件的数据源，插件中可以用 props.options. 来引用
         ... 
     }
-    
+
+### 获取选中数据
+
+组件对外暴露两个方法 `getSelectedItems` 和 `getSelectedItemsMainField` 方法来获取跨页选中的结果。
+
 ### 插件使用方法
 
 单元格组件需要在模板中进行注册才能生效，需要注意的是必须在组件外面包一层 `template` 标签来传递 `scope`，其中的 `slot` 值和上面 `options.headers` 中数据项的 `slot` 字段对应，需要使用动态组件渲染某列单元格的通过这样一个对应关系来配置。

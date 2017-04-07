@@ -22,7 +22,7 @@ test/e2e/screenshots
 gulpfile.js
 
 # mock 数据
-mock
+# mock
 
 # 自己的待开发任务
 TODOs.md

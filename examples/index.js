@@ -28,8 +28,7 @@ new Vue({
                 // 下面配置 只有 type 为 'checkbox' 时生效
                 hasSelectAll: true, // 是否有全选功能，为 true 时，title 被重置为"全选"，缺省值为 true
                 canSwitchSelectInvertion: true, // 是否能反选切换，全部未选中时为全选，有选中项时为反选，缺省值为 true
-                maxChecked: 1,      // 最多选中几个，不设置无限多
-                isOverPage: true    // 是否跨页选中，缺省值为 true
+                maxChecked: 1       // 最多选中几个，不设置无限多
             },
             selectedItems: [1, 4],       // 选中项数组，可以是主键的数组，也可以是选中对象的数组
             // 主键的数组的两种数据类型：
@@ -60,12 +59,16 @@ new Vue({
             // 静态数据
             data: [
                 {
+                    id: 1,
                     name: 'tom',
-                    age: 3
+                    age: 3,
+                    mood: 1
                 },
                 {
+                    id: 2,
                     name: 'jerry',
-                    age: 1
+                    age: 1,
+                    mood: 2
                 }
             ],
             /**
@@ -119,6 +122,12 @@ new Vue({
                 a: 'a',
                 b: 'b'
             });
+        },
+        getSelected() {
+            // 结果
+            console.log(this.$refs.table.getSelectedItems());
+            console.log(this.$refs.table.getSelectedItemsMainField());
         }
+
     }
 });
