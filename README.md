@@ -95,9 +95,13 @@
         ... 
     }
 
-### 获取选中数据
+### 对外方法
 
-组件对外暴露两个方法 `getSelectedItems` 和 `getSelectedItemsMainField` 方法来获取跨页选中的结果。
+`search` 方法，按搜索条件重新加载表格数据，参数就是要搜索的表单数据。
+
+`reloadData` 方法，用来刷新表格当前页。
+
+`getSelectedItems` 和 `getSelectedItemsMainField` 方法，可用来获取跨页选中的结果。
 
 ### 插件使用方法
 

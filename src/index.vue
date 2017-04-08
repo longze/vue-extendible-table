@@ -39,20 +39,20 @@
                     });
                 }
 
-                this.addExtendAttr(dataList);
+                this._addExtendAttr(dataList);
                 this.data = dataList;
 
                 let mainField = this.options.mainField || 'id';
-                this.initSelectedItems(mainField);
+                this._initSelectedItems(mainField);
 
                 if (this.data.length > 0) {
-                    this.rewriteCheckedAttr();
+                    this._rewriteCheckedAttr();
                 }
 
-                this.computeSelectAll();
+                this._computeSelectAll();
             }
 
-            this.loadData();
+            this._loadData();
         },
         components: {
             'el-checkbox': ElCheckbox,
@@ -86,9 +86,26 @@
             }
         },
         methods: {
+            /**
+             * 对外提供搜索接口
+             *
+             * @param {Object} searchData 收索参数
+             */
+            search(searchData) {
+                // 准备搜索数据
+                if (typeof searchData === 'object') {
+                    this.searchData = searchData;
+                }
+                // 重置页码
+                this.page.currentPage = 1;
+
+                this._loadData();
+            },
+            // 获取选中的行数据的数组
             getSelectedItems() {
                 return this.selectedItems;
             },
+            // 获取选中的行数据主键的数组
             getSelectedItemsMainField() {
                 let result = [];
 
@@ -98,6 +115,13 @@
 
                 return result;
             },
+            // 刷新当页数据
+            reloadData() {
+                this._loadData();
+            },
+
+            /***************** 下面是组件的私有方法 ***************/
+
             /**
              * 对回写数据做兼容处理，选中项数组，可以是主键的数组，也可以是选中对象的数组
              * 主键的数组的两种数据类型：
@@ -107,7 +131,7 @@
              *
              * @param {String} mainField 主键字段
              */
-            initSelectedItems(mainField) {
+            _initSelectedItems(mainField) {
                 let selectedItems = [];
                 let optionsSelectedItems = this.options.selectedItems;
 
@@ -132,13 +156,13 @@
                 this.selectedItems = selectedItems;
             },
             // 添加扩展字段，用于实现表格的操作逻辑
-            addExtendAttr(dataList) {
+            _addExtendAttr(dataList) {
                 dataList.forEach(item => {
                     item.checked = false;
                 });
             },
             // 为原数据添加是否选中属性 checked
-            rewriteCheckedAttr() {
+            _rewriteCheckedAttr() {
                 const mainField = this.mainField;
 
                 this.data.forEach(item => {
@@ -154,7 +178,7 @@
                 });
             },
             // 某一行数据的选中状态发生改变
-            selectChange(item, doComputeSelectAll) {
+            _selectChange(item, doComputeSelectAll) {
                 // 移除一条选中数据
                 if (item.checked) {
                     this.selectedItems.some((selectedItem, index) => {
@@ -171,11 +195,11 @@
 
                 // 全选和反选时不需要每次都计算
                 if (!doComputeSelectAll) {
-                    this.computeSelectAll();
+                    this._computeSelectAll();
                 }
             },
             // 计算全选和反选状态
-            computeSelectAll() {
+            _computeSelectAll() {
                 let firstRow = this.options.firstRow;
                 if (firstRow.hasSelectAll) {
                     // 全部没选中
@@ -193,33 +217,14 @@
             },
             // 反选, 全选和反选在逻辑上都是反选，
             // 注：在逻辑处理上只有当前页全不选中才是全选，否则就是反选
-            inverseSelected() {
+            _inverseSelected() {
                 this.data.forEach(item => {
-                    this.selectChange(item, true);
+                    this._selectChange(item, true);
                 });
-                this.computeSelectAll();
-            },
-            // 刷新当页数据
-            reloadData() {
-                this.loadData();
-            },
-            /**
-             * 对外提供搜索接口
-             *
-             * @param {Object} searchData 收索参数
-             */
-            search(searchData) {
-                // 准备搜索数据
-                if (typeof searchData === 'object') {
-                    this.searchData = searchData;
-                }
-                // 重置页码
-                this.page.currentPage = 1;
-
-                this.loadData();
+                this._computeSelectAll();
             },
             // 加载异步数据，共组件内部调用
-            loadData() {
+            _loadData() {
                 if (this.options.url) {
                     this.data = [];
                     this.isShowText = true;
@@ -256,7 +261,7 @@
                         if (this.options.afterGetData) {
                             this.options.afterGetData(res);
                         }
-                        this.addExtendAttr(res.body.data.list);
+                        this._addExtendAttr(res.body.data.list);
                         this.data = res.body.data.list;
 
                         // 数据条数处理
@@ -275,8 +280,8 @@
                             this.text = '暂未找到数据';
                         }
 
-                        this.rewriteCheckedAttr();
-                        this.computeSelectAll();
+                        this._rewriteCheckedAttr();
+                        this._computeSelectAll();
                     }, res => {
                         this.isShowText = true;
                         this.text = res.body.statusInfo || '数据加载失败';
@@ -288,9 +293,9 @@
              *
              * @param {Number} currentPage 返到哪一页
              */
-            changePage(currentPage) {
+            _changePage(currentPage) {
                 this.page.currentPage = currentPage;
-                this.loadData();
+                this._loadData();
             }
         }
     };

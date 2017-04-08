@@ -9,7 +9,7 @@
                     {{options.firstRow.title || '序号'}}
                 </template>
                 <template else-if="options.firstRow.type === 'checkbox'">
-                    <el-checkbox @change="inverseSelected" :label="options.firstRow.title">
+                    <el-checkbox @change="_inverseSelected" :label="options.firstRow.title">
                     </el-checkbox>
                 </template>
             </th>
@@ -27,7 +27,7 @@
                     {{pageBase + index + 1}}
                 </template>
                 <template else-if="options.firstRow.type === 'checkbox'">
-                    <el-checkbox v-model="item.checked" @change="selectChange(item)"></el-checkbox>
+                    <el-checkbox v-model="item.checked" @change="_selectChange(item)"></el-checkbox>
                 </template>
             </td>
             <td v-for="header in options.headers" :class="header.styleClass">
@@ -53,6 +53,6 @@
             layout="prev, pager, next"
             :total="page.dataTotal"
             :current-page="page.currentPage"
-            v-on:current-change="changePage">
+            v-on:current-change="_changePage">
     </el-pagination>
 </div>
