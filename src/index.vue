@@ -1,7 +1,6 @@
 <template src="./index.tpl.html"></template>
 <script>
 
-    import 'element-ui/lib/theme-default/index.css';
     import ElCheckbox from 'element-ui/lib/checkbox';
     import 'element-ui/lib/theme-default/checkbox.css';
     import ElPagination from 'element-ui/lib/pagination';
@@ -9,20 +8,18 @@
 
     export default {
         props: {
+            // 详细说明参见组件的 readme.md
             options: {
                 type: Object,
                 require: true
             }
         },
-        mounted () {
+        mounted() {
             // 处理配置的默认值
             let firstRow = this.options.firstRow;
-
             if (firstRow && firstRow.type === 'checkbox') {
-                firstRow.hasSelectAll = firstRow.hasSelectAll === undefined ? true : firstRow.hasSelectAll;
-                let canSI = firstRow.canSwitchSelectInvertion;
-                firstRow.canSwitchSelectInvertion = canSI === undefined ? true : canSI;
-                firstRow.isOverPage = firstRow.isOverPage === undefined ? true : firstRow.isOverPage;
+                const hasSelectAll = firstRow.hasSelectAll;
+                firstRow.hasSelectAll = hasSelectAll === undefined ? true : hasSelectAll;
 
                 let dataList = [];
                 // 将双向绑定属性洗白成简单对象数据，
@@ -30,10 +27,8 @@
                 if (Array.isArray(this.options.data)) {
                     this.options.data.forEach(item => {
                         let newItem = {};
-                        for (let key in item) {
-                            if (item.hasOwnProperty(key)) {
-                                newItem[key] = item[key];
-                            }
+                        for (let [key, value] of item) {
+                            newItem[key] = value;
                         }
                         dataList.push(newItem);
                     });
@@ -58,7 +53,7 @@
             'el-checkbox': ElCheckbox,
             'el-pagination': ElPagination
         },
-        data () {
+        data() {
             return {
                 data: [],
                 table: this,
@@ -77,7 +72,7 @@
                 },
                 // 首列为序号时需要需要此参数，当前页的序号加上此参数就是多页的序号
                 pageBase: 0
-            }
+            };
         },
         computed: {
             // 是否显示页码
@@ -86,6 +81,7 @@
             }
         },
         methods: {
+
             /**
              * 对外提供搜索接口
              *
@@ -96,31 +92,43 @@
                 if (typeof searchData === 'object') {
                     this.searchData = searchData;
                 }
-                // 重置页码
-                this.page.currentPage = 1;
 
+                this.page.currentPage = 1; // 重置页码
                 this._loadData();
             },
-            // 获取选中的行数据的数组
+
+            /**
+             * 获取选中的行数据的数组
+             *
+             * @return {Array} 选中的行数据的数组
+             */
             getSelectedItems() {
                 return this.selectedItems;
             },
-            // 获取选中的行数据主键的数组
+
+            /**
+             * 获取选中的行数据主键的数组
+             *
+             * @return {Array} result 选中的行数据主键的数组
+             */
             getSelectedItemsMainField() {
                 let result = [];
 
                 this.selectedItems.forEach(item => {
-                   result.push(item[this.mainField]);
+                    result.push(item[this.mainField]);
                 });
 
                 return result;
             },
-            // 刷新当页数据
+
+            /**
+             * 刷新当页数据
+             */
             reloadData() {
                 this._loadData();
             },
 
-            /***************** 下面是组件的私有方法 ***************/
+            // ##################### 下面是组件的私有方法 ##################### //
 
             /**
              * 对回写数据做兼容处理，选中项数组，可以是主键的数组，也可以是选中对象的数组
@@ -129,7 +137,7 @@
              * 选中对象的数组：
              * [{id: 1, name: ''}, {id: 2, name: ''}]
              *
-             * @param {String} mainField 主键字段
+             * @param {string} mainField 主键字段
              */
             _initSelectedItems(mainField) {
                 let selectedItems = [];
@@ -155,13 +163,21 @@
 
                 this.selectedItems = selectedItems;
             },
-            // 添加扩展字段，用于实现表格的操作逻辑
+
+            /**
+             * 添加扩展字段，用于实现表格的操作逻辑
+             *
+             * @param {Array} dataList 表格数据
+             */
             _addExtendAttr(dataList) {
                 dataList.forEach(item => {
                     item.checked = false;
                 });
             },
-            // 为原数据添加是否选中属性 checked
+
+            /**
+             * 为原数据添加是否选中属性 checked
+             */
             _rewriteCheckedAttr() {
                 const mainField = this.mainField;
 
@@ -177,7 +193,14 @@
                     });
                 });
             },
-            // 某一行数据的选中状态发生改变
+
+            /**
+             * 某一行数据的选中状态发生改变
+             *
+             * @param {Object} item 发生数据改变行的数据对象
+             * @param {boolean} doComputeSelectAll 是否做全选状态的计算
+             *                  某些情况下批量改变数据状态，没必要每次都计算
+             */
             _selectChange(item, doComputeSelectAll) {
                 // 移除一条选中数据
                 if (item.checked) {
@@ -198,14 +221,15 @@
                     this._computeSelectAll();
                 }
             },
-            // 计算全选和反选状态
+
+            /**
+             * 计算全选和反选状态
+             */
             _computeSelectAll() {
                 let firstRow = this.options.firstRow;
                 if (firstRow.hasSelectAll) {
                     // 全部没选中
-                    let noOneChecked = this.data.every(item => {
-                        return item.checked === false;
-                    });
+                    const noOneChecked = this.data.every(item => item.checked === false);
 
                     if (noOneChecked) {
                         firstRow.title = '全选';
@@ -215,28 +239,35 @@
                     }
                 }
             },
-            // 反选, 全选和反选在逻辑上都是反选，
-            // 注：在逻辑处理上只有当前页全不选中才是全选，否则就是反选
+
+            /**
+             * 反选(全选和反选在逻辑上都是反选)，
+             * 注：在逻辑处理上只有当前页全不选中才是全选，否则就是反选
+             */
             _inverseSelected() {
                 this.data.forEach(item => {
                     this._selectChange(item, true);
                 });
                 this._computeSelectAll();
             },
-            // 加载异步数据，共组件内部调用
+
+            /**
+             * 加载异步数据，共组件内部调用
+             */
             _loadData() {
                 if (this.options.url) {
                     this.data = [];
                     this.isShowText = true;
                     this.text = '加载中...';
 
-                    // 固定参数
-                    let params = typeof this.options.params === 'object' ? this.options.params : {};
+                    // 搜索参数,默认值为空对象
+                    let params = this.searchData;
 
-                    // 搜索参数
-                    for (let key in this.searchData) {
-                        if (this.searchData.hasOwnProperty(key)) {
-                            params[key] = this.searchData[key];
+                    // 固定参数
+                    if (typeof this.options.params === 'object') {
+                        const staticParam = this.options.params;
+                        for (let [key, value] of staticParam) {
+                            params[key] = value;
                         }
                     }
 
@@ -253,7 +284,7 @@
 
                     // 异步获取数据
                     this.$http.get(this.options.url, {
-                        params: params
+                        params
                     }).then(res => {
                         this.isShowText = false;
 
@@ -288,10 +319,11 @@
                     });
                 }
             },
+
             /**
              * 翻页
              *
-             * @param {Number} currentPage 返到哪一页
+             * @param {number} currentPage 返到哪一页
              */
             _changePage(currentPage) {
                 this.page.currentPage = currentPage;

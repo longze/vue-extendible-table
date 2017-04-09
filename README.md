@@ -16,9 +16,8 @@
         mainField: 'id',      // 默认主键为 "id"
         firstRow: {
             type: 'checkbox',  // 还有 'number'
-            minChecked: 1,    // 只有 type 为 'checkbox' 时生效
-            maxChecked: 5,    // 只有 type 为 'checkbox' 时生效
-            isOverPage: true,  // 只有 type 为 'checkbox' 时生效
+            minChecked: 1,     // 只有 type 为 'checkbox' 时生效
+            maxChecked: 5,     // 只有 type 为 'checkbox' 时生效
             // 挂 class 方便自定义样式，在表头和表体的单元格上都有，可以通过 th 和 td 来区分它们
             styleClass: ['a-class']
         },
