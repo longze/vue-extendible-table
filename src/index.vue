@@ -27,8 +27,10 @@
                 if (Array.isArray(this.options.data)) {
                     this.options.data.forEach(item => {
                         let newItem = {};
-                        for (let [key, value] of item) {
-                            newItem[key] = value;
+                        for (let key in item) {
+                            if (item.hasOwnProperty(key)) {
+                                newItem[key] = item[key];
+                            }
                         }
                         dataList.push(newItem);
                     });
@@ -266,8 +268,10 @@
                     // 固定参数
                     if (typeof this.options.params === 'object') {
                         const staticParam = this.options.params;
-                        for (let [key, value] of staticParam) {
-                            params[key] = value;
+                        for (let key in staticParam) {
+                            if (staticParam.hasOwnProperty(key)) {
+                                params[key] = staticParam[key];
+                            }
                         }
                     }
 

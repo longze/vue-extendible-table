@@ -19,6 +19,7 @@
                 type: Array,
                 required: true
             },
+            // 值
             value: {
                 required: true
             },
@@ -27,19 +28,18 @@
                 type: String,
                 default: '-'
             },
+            // 自定义 class 样式，方便自定义格式
             styleClass: {
                 type: Array,
-                default: () => {
-                    return [];
-                }
+                default: () => []
             }
         },
-        data: function () {
+        data() {
             let text = this.emptyStr;
 
             // 按 map 将 value 转换成 text
             if (Array.isArray(this.dataMap)) {
-                this.dataMap.some((item) => {
+                this.dataMap.some(item => {
                     if (item.value === this.value) {
                         text = item.text;
                         return true;
