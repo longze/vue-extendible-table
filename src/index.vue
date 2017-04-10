@@ -8,7 +8,70 @@
 
     export default {
         props: {
-            // 详细说明参见组件的 readme.md
+            /**
+             * 配置示例：
+             * options: {
+                 mainField: 'id',      // 默认主键为 "id"
+                 firstRow: {
+                     type: 'checkbox',  // 还有 'number'
+                     minChecked: 1,     // 只有 type 为 'checkbox' 时生效
+                     maxChecked: 5,     // 只有 type 为 'checkbox' 时生效
+                     // 挂 class 方便自定义样式，在表头和表体的单元格上都有，可以通过 th 和 td 来区分它们
+                     styleClass: ['a-class']
+                 },
+                 headers: [
+                     {
+                         title: '姓名',        // 表格标题
+                         field: 'name',        // 字段名，prop
+                         width: '50%',         // 宽度同时支持百分比和像素配置
+                         slot: 'text',         // 单元格组件的名称
+                         // 挂 class 方便自定义样式，在表头和表体的单元格上都有，可以通过 th 和 td 来区分它们
+                         styleClass: ['a-class']
+                     },
+                     {
+                         title: '年龄',
+                         field: 'age',
+                         width: '180px',
+                         slot: 'number'
+                     }
+                 ],
+                 // 可以直接展示数据
+                 data: [
+                     {
+                         name: 'tom',
+                         age: 3
+                     },
+                     {
+                         name: 'jerry',
+                         age: 1
+                     }
+                 ],
+                 // 返回的数据可能是一个复杂结构，可以自定义获取数据的方法，也可以做一些数据加工
+                 afterGetData(res) {
+                     // 可以对 res 做数据加工
+                     return res.body.list;
+                 },
+                 getData (res) {
+                     return res.body.data;
+                 },
+                 // 也可以通过配置 url 和 params 异步获取数据
+                 url: '/users',
+                 params: {
+                     name: '',
+                     pageSize: 10,
+                     currentPage: 1
+                 },
+                 // 页码的配置，不配置此项时不显示页码
+                 pageConfig: {
+                     currentPageField: 'currentPage',  // 向后台请求时的字段名 -- 请求第几页数据，缺省值 "currentPage"
+                     pageSizeField: 'pageSize',   // 向后台请求时的字段名 -- 每页要几条，缺省值 "pageSize"
+                     dataTotalField: 'total',     // 后台返回数据总条数的字段设置，缺省值 "total"
+                     pageSize: 10                 // 默认每页 10 条
+                 },
+                 // 还可以添加其他参数，作为插件的数据源，插件中可以用 props.options. 来引用
+                ...
+            }
+            */
             options: {
                 type: Object,
                 require: true
@@ -22,18 +85,8 @@
                 firstRow.hasSelectAll = hasSelectAll === undefined ? true : hasSelectAll;
 
                 let dataList = [];
-                // 将双向绑定属性洗白成简单对象数据，
-                // 这样就可以触发 this.data 赋值时的双向绑定计算
                 if (Array.isArray(this.options.data)) {
-                    this.options.data.forEach(item => {
-                        let newItem = {};
-                        for (let key in item) {
-                            if (item.hasOwnProperty(key)) {
-                                newItem[key] = item[key];
-                            }
-                        }
-                        dataList.push(newItem);
-                    });
+                    dataList = this._cleanOptionData();
                 }
 
                 this._addExtendAttr(dataList);
@@ -84,53 +137,28 @@
         },
         methods: {
 
-            /**
-             * 对外提供搜索接口
-             *
-             * @param {Object} searchData 收索参数
-             */
-            search(searchData) {
-                // 准备搜索数据
-                if (typeof searchData === 'object') {
-                    this.searchData = searchData;
-                }
-
-                this.page.currentPage = 1; // 重置页码
-                this._loadData();
-            },
+            // ##################### 私有方法 ##################### //
 
             /**
-             * 获取选中的行数据的数组
+             * 清理配置数据
+             * 将双向绑定属性洗白成简单对象数据，
+             * 这样就可以触发 this.data 赋值时的双向绑定计算
              *
-             * @return {Array} 选中的行数据的数组
+             * @return {Array} dataList 清理后的配置数据
              */
-            getSelectedItems() {
-                return this.selectedItems;
-            },
-
-            /**
-             * 获取选中的行数据主键的数组
-             *
-             * @return {Array} result 选中的行数据主键的数组
-             */
-            getSelectedItemsMainField() {
-                let result = [];
-
-                this.selectedItems.forEach(item => {
-                    result.push(item[this.mainField]);
+            _cleanOptionData() {
+                let dataList = [];
+                this.options.data.forEach(item => {
+                    let newItem = {};
+                    for (let key in item) {
+                        if (item.hasOwnProperty(key)) {
+                            newItem[key] = item[key];
+                        }
+                    }
+                    dataList.push(newItem);
                 });
-
-                return result;
+                return dataList;
             },
-
-            /**
-             * 刷新当页数据
-             */
-            reloadData() {
-                this._loadData();
-            },
-
-            // ##################### 下面是组件的私有方法 ##################### //
 
             /**
              * 对回写数据做兼容处理，选中项数组，可以是主键的数组，也可以是选中对象的数组
@@ -142,28 +170,40 @@
              * @param {string} mainField 主键字段
              */
             _initSelectedItems(mainField) {
-                let selectedItems = [];
-                let optionsSelectedItems = this.options.selectedItems;
+                let selectedItems;
+                let items = this.options.selectedItems;
 
-                if (Array.isArray(optionsSelectedItems) && optionsSelectedItems.length > 0) {
-                    let dataType = typeof optionsSelectedItems[0];
-
-                    // 直接传入以主键为元素的数组
-                    if (dataType === 'number' || dataType === 'string') {
-                        selectedItems = [];
-                        optionsSelectedItems.forEach(item => {
-                            selectedItems.push({
-                                [mainField]: item
-                            });
-                        });
-                    }
-                    // 传入以对象为元素的数组
-                    else {
-                        selectedItems = this.options.selectedItems;
-                    }
+                if (Array.isArray(items) && items.length > 0) {
+                    selectedItems = this._switchSelectedItems(mainField);
                 }
 
                 this.selectedItems = selectedItems;
+            },
+
+            /**
+             * 将主键的数组转换成数据行的数组
+             *
+             * @param {string} mainField 主键字段名
+             * @return {Array} selectedItems 选中项数据的数组
+             */
+            _switchSelectedItems(mainField) {
+                let selectedItems;
+                let optionsSelectedItems = this.options.selectedItems;
+                let dataType = typeof optionsSelectedItems[0];
+
+                // 直接传入以主键为元素的数组
+                if (dataType === 'number' || dataType === 'string') {
+                    selectedItems = [];
+                    optionsSelectedItems.forEach(item => {
+                        selectedItems.push({[mainField]: item});
+                    });
+                }
+                // 传入以对象为元素的数组
+                else {
+                    selectedItems = this.options.selectedItems;
+                }
+
+                return selectedItems;
             },
 
             /**
@@ -259,71 +299,78 @@
              * 加载异步数据，共组件内部调用
              */
             _loadData() {
-                if (this.options.url) {
-                    this.data = [];
-                    this.isShowText = true;
-                    this.text = '加载中...';
+                if (typeof this.options.url !== 'string') {
+                    return;
+                }
 
-                    // 搜索参数,默认值为空对象
-                    let params = this.searchData;
+                this.data = [];
+                this.isShowText = true;
+                this.text = '加载中...';
 
-                    // 固定参数
-                    if (typeof this.options.params === 'object') {
-                        const staticParam = this.options.params;
-                        for (let key in staticParam) {
-                            if (staticParam.hasOwnProperty(key)) {
-                                params[key] = staticParam[key];
-                            }
-                        }
+                let params = this._getParams();
+
+                // 异步获取数据
+                this.$http.get(this.options.url, {
+                    params
+                }).then(res => {
+                    this.isShowText = false;
+
+                    // 对外提供数据加工时机，来应对数据异构的情况
+                    if (this.options.afterGetData) {
+                        this.options.afterGetData(res);
                     }
+                    this._addExtendAttr(res.body.data.list);
+                    this.data = res.body.data.list;
 
-                    // 页码处理
-                    let pageSize;
+                    // 数据条数处理
                     if (this.showPage) {
                         let config = this.options.pageConfig;
-                        let currentPageField = config.currentPageField ? config.currentPageField : 'currentPage';
-                        params[currentPageField] = this.page.currentPage;
-                        let pageSizeField = config.pageSizeField ? config.pageSizeField : 'pageSize';
-                        pageSize = config.pageSize || 10;
-                        params[pageSizeField] = pageSize;
+                        let dataTotalField = config.dataTotalField ? config.dataTotalField : 'total';
+                        this.page.dataTotal = res.body.data[dataTotalField];
+
+                        if (this.options.firstRow && this.options.firstRow.type === 'number') {
+                            this.pageBase = (this.page.currentPage - 1) * this.page.pageSize;
+                        }
                     }
 
-                    // 异步获取数据
-                    this.$http.get(this.options.url, {
-                        params
-                    }).then(res => {
-                        this.isShowText = false;
-
-                        // 对外提供数据加工时机，来应对数据异构的情况
-                        if (this.options.afterGetData) {
-                            this.options.afterGetData(res);
-                        }
-                        this._addExtendAttr(res.body.data.list);
-                        this.data = res.body.data.list;
-
-                        // 数据条数处理
-                        if (this.showPage) {
-                            let config = this.options.pageConfig;
-                            let dataTotalField = config.dataTotalField ? config.dataTotalField : 'total';
-                            this.page.dataTotal = res.body.data[dataTotalField];
-
-                            if (this.options.firstRow && this.options.firstRow.type === 'number') {
-                                this.pageBase = (this.page.currentPage - 1) * pageSize;
-                            }
-                        }
-
-                        if (this.data.length === 0) {
-                            this.isShowText = true;
-                            this.text = '暂未找到数据';
-                        }
-
-                        this._rewriteCheckedAttr();
-                        this._computeSelectAll();
-                    }, res => {
+                    if (this.data.length === 0) {
                         this.isShowText = true;
-                        this.text = res.body.statusInfo || '数据加载失败';
-                    });
+                        this.text = '暂未找到数据';
+                    }
+
+                    this._rewriteCheckedAttr();
+                    this._computeSelectAll();
+                }, res => {
+                    this.isShowText = true;
+                    this.text = res.body.statusInfo || '数据加载失败';
+                });
+            },
+
+            _getParams() {
+                // 搜索参数,默认值为空对象
+                let params = this.searchData;
+
+                // 固定参数
+                if (typeof this.options.params === 'object') {
+                    const staticParam = this.options.params;
+                    for (let key in staticParam) {
+                        if (staticParam.hasOwnProperty(key)) {
+                            params[key] = staticParam[key];
+                        }
+                    }
                 }
+
+                // 页码处理
+                if (this.showPage) {
+                    let config = this.options.pageConfig;
+                    let currentPageField = config.currentPageField ? config.currentPageField : 'currentPage';
+                    params[currentPageField] = this.page.currentPage;
+                    let pageSizeField = config.pageSizeField ? config.pageSizeField : 'pageSize';
+                    config.pageSize = config.pageSize || 10;
+                    params[pageSizeField] = config.pageSize;
+                }
+
+                return params;
             },
 
             /**
@@ -333,6 +380,54 @@
              */
             _changePage(currentPage) {
                 this.page.currentPage = currentPage;
+                this._loadData();
+            },
+
+            // ##################### 私有方法 ##################### //
+
+            /**
+             * 对外提供搜索接口
+             *
+             * @param {Object} searchData 收索参数
+             */
+            search(searchData) {
+                // 准备搜索数据
+                if (typeof searchData === 'object') {
+                    this.searchData = searchData;
+                }
+
+                this.page.currentPage = 1; // 重置页码
+                this._loadData();
+            },
+
+            /**
+             * 获取选中的行数据的数组
+             *
+             * @return {Array} 选中的行数据的数组
+             */
+            getSelectedItems() {
+                return this.selectedItems;
+            },
+
+            /**
+             * 获取选中的行数据主键的数组
+             *
+             * @return {Array} result 选中的行数据主键的数组
+             */
+            getSelectedItemsMainField() {
+                let result = [];
+
+                this.selectedItems.forEach(item => {
+                    result.push(item[this.mainField]);
+                });
+
+                return result;
+            },
+
+            /**
+             * 刷新当页数据
+             */
+            reloadData() {
                 this._loadData();
             }
         }

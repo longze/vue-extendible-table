@@ -61,26 +61,6 @@
         // 返回的数据可能是一个复杂结构，可以自定义获取数据的方法，也可以做一些数据加工
         afterGetData(res) {
             // 可以对 res 做数据加工
-            // 组件期待 res.body 的格式是这样：
-            /*
-            {
-                "code": 200,
-                "msg": "",
-                "data": {
-                    "list": [
-                        {
-                            name: 'jerry from service',
-                            age: 1
-                        },
-                        {
-                            name: 'tom',
-                            age: 3
-                        }
-                    ],
-                    "total": 50
-                }
-            }
-            */
             return res.body.list;
         },
         getData (res) {
