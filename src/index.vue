@@ -271,7 +271,7 @@
              */
             _computeSelectAll() {
                 let firstRow = this.options.firstRow;
-                if (firstRow.hasSelectAll) {
+                if (typeof firstRow.hasSelectAll === 'object' && firstRow.hasSelectAll) {
                     // 全部没选中
                     const noOneChecked = this.data.every(item => item.checked === false);
 
