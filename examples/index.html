@@ -9,12 +9,6 @@
     <button @click="search"> 查询 </button>
     <!-- 的 -->
     <table-component :options="tableOptions" ref="table">
-        <template slot="text" scope="props">
-            <vst-text-plugin :data="props.data"></vst-text-plugin>
-        </template>
-        <template slot="number" scope="props">
-            <vst-number-plugin :data="props.data" :table="props.table"></vst-number-plugin>
-        </template>
         <template slot="text-map" scope="props">
             <vst-text-map
                     :value="props.data"

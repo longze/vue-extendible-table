@@ -216,11 +216,13 @@
                 else {
                     this.selectedItems.push(item);
                 }
-                item.checked = !item.checked;
 
                 // 全选和反选时不需要每次都计算
                 if (!doComputeSelectAll) {
                     this._computeSelectAll();
+                }
+                else {
+                    item.checked = !item.checked;
                 }
             },
 

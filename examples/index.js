@@ -7,8 +7,6 @@ import VueResource from 'vue-resource';
 Vue.use(VueResource);
 
 import tableComponent from '../src/index.vue';
-import vstTextPlugin from '../src/vst-plugin/text';
-import vstNumberPlugin from '../src/vst-plugin/number';
 import vstTextMap from '../src/vst-plugin/text-map';
 
 import 'element-ui/lib/theme-default/checkbox.css';
@@ -40,14 +38,12 @@ new Vue({
                     title: '姓名',        // 表格标题
                     field: 'name',        // 字段名，prop
                     // width: '50%',         // 宽度同时支持百分比和像素配置
-                    slot: 'text',          // 单元格组件的名称
                     styleClass: ['a-class']
                 },
                 {
                     title: '年龄',
                     field: 'age',
-                    width: '180px',
-                    slot: 'number'
+                    width: '180px'
                 },
                 {
                     title: '心情',
@@ -109,8 +105,6 @@ new Vue({
     },
     components: {
         'table-component': tableComponent,
-        'vst-text-plugin': vstTextPlugin,
-        'vst-number-plugin': vstNumberPlugin,
         'vst-text-map': vstTextMap,
         'el-pagination': ElPagination
     },
