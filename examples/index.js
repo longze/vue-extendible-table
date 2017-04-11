@@ -49,7 +49,18 @@ new Vue({
                     title: '心情',
                     field: 'mood',
                     width: '180px',
-                    slot: 'text-map'
+                    slot: 'text-map',
+                    // 为某个插件准备的数据，可以是业务数据
+                    moodMap: [
+                        {
+                            value: 1,
+                            text: '平静'
+                        },
+                        {
+                            value: 2,
+                            text: '激动'
+                        }
+                    ]
                 }
             ],
             // 静态数据
@@ -87,18 +98,7 @@ new Vue({
                 dataTotalField: 'total',
                 pageSizeField: 'pageSize',
                 pageSize: 10
-            },
-            // 为某个插件准备的数据，可以是业务数据
-            moodMap: [
-                {
-                    value: 1,
-                    text: '平静'
-                },
-                {
-                    value: 2,
-                    text: '激动'
-                }
-            ]
+            }
         },
         text: 'abc'
 

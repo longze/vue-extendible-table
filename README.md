@@ -104,7 +104,7 @@
             <vst-number-plugin 
                 :data="props.data" 
                 :table="props.table" 
-                :plugin-data="props.options.pluginData">
+                :plugin-data="props.headerOptions.pluginData">
             </vst-number-plugin>
         </template>
     </table-component>
@@ -125,7 +125,7 @@
         data,            // 当前单元格的数据
         lineData,        // 当前单元格所在行的数据
         tableData,       // 表格的整体数据
-        columnOptions,   // 当前单元格的配置信息
+        headerOptions,   // 当前单元格的配置信息
         table,           // 表格的引用，可以通过此参数直接使用表格的方法
         options          // 配置 table 的数据，可以用来传递插件特有数据
     }
