@@ -40,6 +40,11 @@
             if (this.value) {
                 let date = new Date(+this.value);
                 // todo Invalid Date 判断
+                let m = date.getMinutes();
+                if (m < 10) {
+                    m = '0' + m;
+                }
+
                 text = ''
                     + date.getFullYear()
                     + '-'
@@ -49,7 +54,7 @@
                     + ' '
                     + date.getHours()
                     + ':'
-                    + date.getMinutes();
+                    + m;
             }
 
             return {
