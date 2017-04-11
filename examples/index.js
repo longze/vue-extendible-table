@@ -8,6 +8,7 @@ Vue.use(VueResource);
 
 import tableComponent from '../src/index.vue';
 import vstTextMap from '../src/vst-plugin/text-map';
+import vstTimeFormat from '../src/vst-plugin/time-format';
 
 import 'element-ui/lib/theme-default/checkbox.css';
 import ElPagination from 'element-ui/lib/pagination';
@@ -61,6 +62,12 @@ new Vue({
                             text: '激动'
                         }
                     ]
+                },
+                {
+                    title: '时间',
+                    field: 'time',
+                    width: '180px',
+                    slot: 'time-format',
                 }
             ],
             // 静态数据
@@ -106,6 +113,7 @@ new Vue({
     components: {
         'table-component': tableComponent,
         'vst-text-map': vstTextMap,
+        'vst-time-format': vstTimeFormat,
         'el-pagination': ElPagination
     },
     methods: {

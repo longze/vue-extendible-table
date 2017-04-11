@@ -5,13 +5,15 @@ module.exports = function (params, req) {
             id: 1,
             name: 'jerry',
             age: 1,
-            mood: 1
+            mood: 1,
+            time: '1491895390009'
         },
         {
             id: 2,
             name: 'tom1',
             age: 3,
-            mood: 2
+            mood: 2,
+            time: 1491895390009
         },
         {
             id: 3,

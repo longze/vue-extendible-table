@@ -16,6 +16,11 @@
                     :style-class="['a-class', 'b-class']">
             </vst-text-map>
         </template>
+        <template slot="time-format" scope="props">
+            <vst-time-format
+                    :value="props.data">
+            </vst-time-format>
+        </template>
     </table-component>
     <input type="button" value="输出选中项到控制台" @click="getSelected">
 </div>
