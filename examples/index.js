@@ -1,19 +1,21 @@
 /**
- * Created by zhaoxiaoqiang on 2017/2/26.
+ * @file 组件示例
+ *
+ * @author zhaoxiaoqiang
+ * @date 2017/4/12
  */
 import Vue from 'vue/dist/vue.common.js';
 import VueResource from 'vue-resource';
 
-Vue.use(VueResource);
-
 import tableComponent from '../src/index.vue';
 import vstTextMap from '../src/vst-plugin/text-map';
 import vstTimeFormat from '../src/vst-plugin/time-format';
-
 import 'element-ui/lib/theme-default/checkbox.css';
 import ElPagination from 'element-ui/lib/pagination';
 import 'element-ui/lib/theme-default/pagination.css';
 import 'element-ui/lib/theme-default/index.css';
+
+Vue.use(VueResource);
 
 new Vue({
     el: '#app',
@@ -85,15 +87,15 @@ new Vue({
                     mood: 2
                 }
             ],
+
             /**
              * 返回的数据可能是一个复杂结构，可以自定义获取数据的方法，也可以做一些数据加工
              *
-             * @param res {Object} 返回的数据，组件默认使用 vue-resource 加载异步数据，
-             *                     默认会在后台返回的数据上加一层 body ，当然你可以全局设置去掉 body
-             * @return {Array} 表格的数据
+             * @param {Object} res 返回的数据，组件默认使用 vue-resource 加载异步数据
              */
-            afterGetData (res) {
-                return res.body.data.list;
+            afterGetData(res) {
+                // 默认会在后台返回的数据上加一层 body ，当然你可以全局设置去掉 body
+                // 改变 res 数据结构适应组件要求
             },
             url: '/users',
             params: {
@@ -117,14 +119,20 @@ new Vue({
         'el-pagination': ElPagination
     },
     methods: {
-        // 模拟表单的查询条件
-        search () {
-            // this.$refs.table.reloadData
+
+        /**
+         * 模拟表单的查询条件
+         */
+        search() {
             this.$refs.table.search({
                 a: 'a',
                 b: 'b'
             });
         },
+
+        /**
+         * 获取选中项的示例
+         */
         getSelected() {
             // 结果
             console.log(this.$refs.table.getSelectedItems());
