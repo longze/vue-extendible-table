@@ -40,21 +40,25 @@
             if (this.value) {
                 let date = new Date(+this.value);
                 // todo Invalid Date 判断
-                let m = date.getMinutes();
-                if (m < 10) {
-                    m = '0' + m;
-                }
+                let m = date.getMonth() + 1;
+                let d = date.getDate();
+                let h = date.getMinutes();
+
+                m = m < 10 ? '0' + m : m;
+                d = d < 10 ? '0' + d : d;
+                h = h < 10 ? '0' + h : h;
+
 
                 text = ''
                     + date.getFullYear()
                     + '-'
-                    + (date.getMonth() + 1)
+                    + m
                     + '-'
-                    + date.getDate()
+                    + d
                     + ' '
-                    + date.getHours()
+                    + h
                     + ':'
-                    + m;
+                    + h;
             }
 
             return {

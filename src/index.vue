@@ -5,6 +5,7 @@
     import 'element-ui/lib/theme-default/checkbox.css';
     import ElPagination from 'element-ui/lib/pagination';
     import 'element-ui/lib/theme-default/pagination.css';
+    import 'element-ui/lib/theme-default/icon.css';
 
     export default {
         props: {
