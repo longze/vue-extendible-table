@@ -79,19 +79,20 @@
             }
         },
         mounted() {
+            // 直接提供数据
+            let dataList = [];
+            if (Array.isArray(this.options.data)) {
+                dataList = this._cleanOptionData();
+            }
+
+            this._addExtendAttr(dataList);
+            this.data = dataList;
+
             // 处理配置的默认值
             let firstRow = this.options.firstRow;
             if (firstRow && firstRow.type === 'checkbox') {
                 const hasSelectAll = firstRow.hasSelectAll;
                 firstRow.hasSelectAll = hasSelectAll === undefined ? true : hasSelectAll;
-
-                let dataList = [];
-                if (Array.isArray(this.options.data)) {
-                    dataList = this._cleanOptionData();
-                }
-
-                this._addExtendAttr(dataList);
-                this.data = dataList;
 
                 let mainField = this.options.mainField || 'id';
                 this._initSelectedItems(mainField);

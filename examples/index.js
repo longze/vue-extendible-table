@@ -138,6 +138,5 @@ new Vue({
             console.log(this.$refs.table.getSelectedItems());
             console.log(this.$refs.table.getSelectedItemsMainField());
         }
-
     }
 });
