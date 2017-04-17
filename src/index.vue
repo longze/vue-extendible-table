@@ -12,70 +12,75 @@
             /**
              * 配置示例：
              * options: {
-                 mainField: 'id',      // 默认主键为 "id"
-                 firstRow: {
-                     type: 'checkbox',  // 还有 'number'
-                     minChecked: 1,     // 只有 type 为 'checkbox' 时生效
-                     maxChecked: 5,     // 只有 type 为 'checkbox' 时生效
-                     // 挂 class 方便自定义样式，在表头和表体的单元格上都有，可以通过 th 和 td 来区分它们
-                     styleClass: ['a-class']
-                 },
-                 headers: [
-                     {
-                         title: '姓名',        // 表格标题
-                         field: 'name',        // 字段名，prop
-                         width: '50%',         // 宽度同时支持百分比和像素配置
-                         slot: 'text',         // 单元格组件的名称
-                         // 挂 class 方便自定义样式，在表头和表体的单元格上都有，可以通过 th 和 td 来区分它们
-                         styleClass: ['a-class']
-                     },
-                     {
-                         title: '年龄',
-                         field: 'age',
-                         width: '180px',
-                         slot: 'number'
-                     }
-                 ],
-                 // 可以直接展示数据
-                 data: [
-                     {
-                         name: 'tom',
-                         age: 3
-                     },
-                     {
-                         name: 'jerry',
-                         age: 1
-                     }
-                 ],
-                 // 返回的数据可能是一个复杂结构，可以自定义获取数据的方法，也可以做一些数据加工
-                 afterGetData(res) {
-                     // 可以对 res 做数据加工
-                     return res.body.list;
-                 },
-                 getData (res) {
-                     return res.body.data;
-                 },
-                 // 也可以通过配置 url 和 params 异步获取数据
-                 url: '/users',
-                 params: {
-                     name: '',
-                     pageSize: 10,
-                     currentPage: 1
-                 },
-                 // 页码的配置，不配置此项时不显示页码
-                 pageConfig: {
-                     currentPageField: 'currentPage',  // 向后台请求时的字段名 -- 请求第几页数据，缺省值 "currentPage"
-                     pageSizeField: 'pageSize',   // 向后台请求时的字段名 -- 每页要几条，缺省值 "pageSize"
-                     dataTotalField: 'total',     // 后台返回数据总条数的字段设置，缺省值 "total"
-                     pageSize: 10                 // 默认每页 10 条
-                 },
-                 // 还可以添加其他参数，作为插件的数据源，插件中可以用 props.options. 来引用
-                ...
-            }
-            */
+             *     mainField: 'id',      // 默认主键为 "id"
+             *     firstRow: {
+             *         type: 'checkbox',  // 还有 'number'
+             *         minChecked: 1,     // 只有 type 为 'checkbox' 时生效
+             *         maxChecked: 5,     // 只有 type 为 'checkbox' 时生效
+             *         // 挂 class 方便自定义样式，在表头和表体的单元格上都有，可以通过 th 和 td 来区分它们
+             *         styleClass: ['a-class']
+             *     },
+             *     headers: [
+             *         {
+             *             title: '姓名',        // 表格标题
+             *             field: 'name',        // 字段名，prop
+             *             width: '50%',         // 宽度同时支持百分比和像素配置
+             *             slot: 'text',         // 单元格组件的名称
+             *             // 挂 class 方便自定义样式，在表头和表体的单元格上都有，可以通过 th 和 td 来区分它们
+             *             styleClass: ['a-class']
+             *         },
+             *         {
+             *             title: '年龄',
+             *             field: 'age',
+             *             width: '180px',
+             *             slot: 'number'
+             *         }
+             *     ],
+             *     // 可以直接展示数据
+             *     data: [
+             *         {
+             *             name: 'tom',
+             *             age: 3
+             *         },
+             *         {
+             *             name: 'jerry',
+             *             age: 1
+             *         }
+             *     ],
+             *     // 返回的数据可能是一个复杂结构，可以自定义获取数据的方法，也可以做一些数据加工
+             *     afterGetData(res) {
+             *         // 可以对 res 做数据加工
+             *         return res.body.list;
+             *     },
+             *     // 也可以通过配置 url 和 params 异步获取数据
+             *     url: '/users',
+             *     params: {
+             *         name: '',
+             *         pageSize: 10,
+             *         currentPage: 1
+             *     },
+             *     // 页码的配置，不配置此项时不显示页码
+             *     pageConfig: {
+             *         currentPageField: 'currentPage',  // 向后台请求时的字段名 -- 请求第几页数据，缺省值 "currentPage"
+             *         pageSizeField: 'pageSize',   // 向后台请求时的字段名 -- 每页要几条，缺省值 "pageSize"
+             *         dataTotalField: 'total',     // 后台返回数据总条数的字段设置，缺省值 "total"
+             *         pageSize: 10                 // 默认每页 10 条
+             *     },
+             *     // 还可以添加其他参数，作为插件的数据源，插件中可以用 props.options. 来引用
+             *    ...
+             * }
+             */
             options: {
                 type: Object,
-                require: true
+                require: true,
+                default: () => {
+                    return {
+                        mainField: 'id',      // 默认主键为 "id"
+                        firstRow: false,
+                        headers: [],
+                        data: []
+                    };
+                }
             }
         },
         mounted() {
@@ -102,6 +107,9 @@
                 }
 
                 this._computeSelectAll();
+            }
+            else {
+                this.options.firstRow = false;
             }
 
             this._loadData();
@@ -150,15 +158,18 @@
              */
             _cleanOptionData() {
                 let dataList = [];
-                this.options.data.forEach(item => {
-                    let newItem = {};
-                    for (let key in item) {
-                        if (item.hasOwnProperty(key)) {
-                            newItem[key] = item[key];
+                if (Array.isArray(this.options.data)) {
+                    this.options.data.forEach(item => {
+                        let newItem = {};
+                        for (let key in item) {
+                            if (item.hasOwnProperty(key)) {
+                                newItem[key] = item[key];
+                            }
                         }
-                    }
-                    dataList.push(newItem);
-                });
+                        dataList.push(newItem);
+                    });
+                }
+
                 return dataList;
             },
 
@@ -215,18 +226,18 @@
              */
             _addExtendAttr(dataList) {
                 dataList.forEach(item => {
-                    item.checked = false;
+                    item._checked = false;
                 });
             },
 
             /**
-             * 为原数据添加是否选中属性 checked
+             * 为原数据添加是否选中属性 _checked
              */
             _rewriteCheckedAttr() {
                 const mainField = this.mainField;
 
                 this.data.forEach(item => {
-                    item.checked = this.selectedItems.some((selectedItem, index) => {
+                    item._checked = this.selectedItems.some((selectedItem, index) => {
                         if (item[mainField] === selectedItem[mainField]) {
                             // 这里用原数据替换之前传入的数据 为了 数据的统一，
                             // 新选中的数据和传入的选中项数据异构时不方便处理
@@ -247,7 +258,7 @@
              */
             _selectChange(item, doComputeSelectAll) {
                 // 移除一条选中数据
-                if (item.checked) {
+                if (item._checked) {
                     this.selectedItems.some((selectedItem, index) => {
                         if (item[this.mainField] === selectedItem[this.mainField]) {
                             this.selectedItems.splice(index, 1);
@@ -264,7 +275,7 @@
                     this._computeSelectAll();
                 }
                 else {
-                    item.checked = !item.checked;
+                    item._checked = !item._checked;
                 }
             },
 
@@ -273,9 +284,9 @@
              */
             _computeSelectAll() {
                 let firstRow = this.options.firstRow;
-                if (typeof firstRow === 'object' && firstRow.hasSelectAll) {
+                if (firstRow.hasSelectAll) {
                     // 全部没选中
-                    const noOneChecked = this.data.every(item => item.checked === false);
+                    const noOneChecked = this.data.every(item => item._checked === false);
 
                     if (noOneChecked) {
                         firstRow.title = '全选';
@@ -330,7 +341,8 @@
                         let dataTotalField = config.dataTotalField ? config.dataTotalField : 'total';
                         this.page.dataTotal = res.body.data[dataTotalField];
 
-                        if (this.options.firstRow && this.options.firstRow.type === 'number') {
+                        // 当没有设置 firstRow 时，此配置会被重置为 false
+                        if (this.options.firstRow.type === 'number') {
                             this.pageBase = (this.page.currentPage - 1) * this.page.pageSize;
                         }
                     }

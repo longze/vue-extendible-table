@@ -63,9 +63,6 @@
             // 可以对 res 做数据加工
             return res.body.list;
         },
-        getData (res) {
-            return res.body.data;
-        },
         // 也可以通过配置 url 和 params 异步获取数据
         url: '/users',
         params: {

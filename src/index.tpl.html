@@ -27,7 +27,7 @@
                     {{pageBase + index + 1}}
                 </template>
                 <template else-if="options.firstRow.type === 'checkbox'">
-                    <el-checkbox v-model="item.checked" @change="_selectChange(item)"></el-checkbox>
+                    <el-checkbox v-model="item._checked" @change="_selectChange(item)"></el-checkbox>
                 </template>
             </td>
             <td v-for="header in options.headers" :class="header.styleClass">
