@@ -225,9 +225,11 @@
              * @param {Array} dataList 表格数据
              */
             _addExtendAttr(dataList) {
-                dataList.forEach(item => {
-                    item._checked = false;
-                });
+                if (Array.isArray(dataList)) {
+                    dataList.forEach(item => {
+                        item._checked = false;
+                    });
+                }
             },
 
             /**
