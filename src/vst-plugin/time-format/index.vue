@@ -40,25 +40,34 @@
             if (this.value) {
                 let date = new Date(+this.value);
                 // todo Invalid Date 判断
-                let m = date.getMonth() + 1;
-                let d = date.getDate();
-                let h = date.getMinutes();
+                let Y = date.getFullYear();
+                let M = date.getMonth() + 1;
+                let D = date.getDate();
 
-                m = m < 10 ? '0' + m : m;
-                d = d < 10 ? '0' + d : d;
+                let h = date.getHours();
+                let m = date.getMinutes();
+                let s = date.getSeconds();
+
+                M = M < 10 ? '0' + M : M;
+                D = D < 10 ? '0' + D : D;
                 h = h < 10 ? '0' + h : h;
-
+                m = m < 10 ? '0' + m : m;
+                s = s < 10 ? '0' + s : s;
 
                 text = ''
-                    + date.getFullYear()
+                    // 年月日
+                    + Y
                     + '-'
-                    + m
+                    + M
                     + '-'
-                    + d
+                    + D
+                    // 时分秒
                     + ' '
                     + h
                     + ':'
-                    + h;
+                    + m
+                    + ':'
+                    + s;
             }
 
             return {
