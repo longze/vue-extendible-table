@@ -84,7 +84,8 @@ new Vue({
                     id: 2,
                     name: 'jerry',
                     age: 1,
-                    mood: 2
+                    mood: 2,
+                    time: 1492666945092
                 }
             ],
 
@@ -97,7 +98,7 @@ new Vue({
                 // 默认会在后台返回的数据上加一层 body ，当然你可以全局设置去掉 body
                 // 改变 res 数据结构适应组件要求
             },
-            url: '/users',
+            // url: '/users',
             params: {
                 name: '固定参数，和搜索条件与页码无关'
             },

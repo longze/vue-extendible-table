@@ -19,7 +19,7 @@ test/e2e/reports
 test/e2e/screenshots
 
 # 脚手架
-gulpfile.js
+# gulpfile.js
 
 # mock 数据
 # mock
