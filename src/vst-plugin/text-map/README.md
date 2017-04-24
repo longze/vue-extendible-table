@@ -7,8 +7,6 @@
     // 引用
     import textMap from '../src/vst-plugin/text-map';
     
-    // props 说明
-    
     // 模板
     <text-map
             :data-map="dataMap"
