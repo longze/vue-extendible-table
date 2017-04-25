@@ -26,3 +26,11 @@ value，必要参数，值。
 empty-str，可选参数，默认值 `-`，没有匹配项时文本值。
 
 style-class，可选参数，样式。
+
+## 参考
+
+https://github.com/hustcc/timeago.js
+
+https://github.com/phstc/jquery-dateFormat
+
+https://github.com/search?utf8=%E2%9C%93&q=date+format&type=
