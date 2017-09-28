@@ -334,8 +334,15 @@
                     if (this.options.afterGetData) {
                         this.options.afterGetData(res);
                     }
-                    this._addExtendAttr(res.body.data.list);
-                    this.data = res.body.data.list;
+                    let list;
+                    if (res.body) {
+                        list = res.body.data.list;
+                    }
+                    else {
+                        list = res.data.list;
+                    }
+                    this._addExtendAttr(list);
+                    this.data = list;
 
                     // 数据条数处理
                     if (this.showPage) {
@@ -370,7 +377,9 @@
                 if (typeof this.options.params === 'object') {
                     const staticParam = this.options.params;
                     for (let key in staticParam) {
-                        if (staticParam.hasOwnProperty(key)) {
+                        if (staticParam.hasOwnProperty(key)
+                            // 搜索条件中有的字段，不被静态字段覆盖
+                            && params[key] === undefined) {
                             params[key] = staticParam[key];
                         }
                     }

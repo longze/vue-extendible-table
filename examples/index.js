@@ -69,7 +69,7 @@ new Vue({
                     title: '时间',
                     field: 'time',
                     width: '180px',
-                    slot: 'time-format',
+                    slot: 'time-format'
                 }
             ],
             // 静态数据
@@ -100,7 +100,7 @@ new Vue({
             },
             // url: '/users',
             params: {
-                name: '固定参数，和搜索条件与页码无关'
+                name: '固定参数，和搜索条件与页码无关，会覆盖搜索参数'
             },
             // 页码的配置，不配置此项时不显示页码
             pageConfig: {

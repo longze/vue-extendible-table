@@ -9,7 +9,7 @@ npm-debug.log
 dist
 
 # node 依赖包
-node_modules/
+node_modules
 
 # Mac 的生成文件
 .DS_Store
